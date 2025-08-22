@@ -1,91 +1,80 @@
-/* Reset */
-* {
+body, html {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: 'Courier New', monospace;
-}
-
-/* Corpo */
-body {
-  background: black;
-  height: 100vh;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 100%;
+  width: 100%;
+  background: black;
+  font-family: monospace;
+  color: white;
 }
 
-/* Telas */
 .screen {
   position: absolute;
-  inset: 0;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.screen.active {
+  top: 0; left: 0;
+  height: 100%;
+  width: 100%;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
 }
 
-/* Efeito fundo de TV sem sinal (PB) */
-#screen1 {
-  background: url('https://i.imgur.com/nb3Ruw5.gif') center/cover no-repeat;
-  filter: grayscale(100%) brightness(0.4);
+.hidden {
+  display: none;
 }
 
-/* Título glitch */
+#noise {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
 .glitch {
-  font-size: clamp(2.5rem, 8vw, 6rem);
-  font-weight: bold;
+  font-size: 4em;
   position: relative;
   color: white;
-  text-transform: uppercase;
-  letter-spacing: 4px;
   animation: glitch-skew 1s infinite linear alternate-reverse;
-  text-align: center;
 }
 
-.glitch::before,
-.glitch::after {
+.glitch::before, .glitch::after {
   content: attr(data-text);
   position: absolute;
   left: 0;
-  top: 0;
+  width: 100%;
   background: transparent;
   overflow: hidden;
+  clip: rect(0, 900px, 0, 0);
 }
 
 .glitch::before {
-  left: 2px;
-  text-shadow: -2px 0 white;
-  animation: glitch-anim 2s infinite linear alternate-reverse;
+  animation: glitchTop 2s infinite linear alternate-reverse;
+  color: #aaa;
 }
 
 .glitch::after {
-  left: -2px;
-  text-shadow: -2px 0 gray;
-  animation: glitch-anim2 2s infinite linear alternate-reverse;
+  animation: glitchBottom 1.5s infinite linear alternate-reverse;
+  color: #555;
 }
 
-@keyframes glitch-anim {
-  0% { clip-path: inset(20% 0 60% 0); }
-  20% { clip-path: inset(40% 0 30% 0); }
-  40% { clip-path: inset(10% 0 50% 0); }
-  60% { clip-path: inset(30% 0 40% 0); }
-  80% { clip-path: inset(25% 0 60% 0); }
-  100% { clip-path: inset(20% 0 60% 0); }
+@keyframes glitchTop {
+  0% { clip: rect(0, 9999px, 0, 0); }
+  20% { clip: rect(0, 9999px, 50px, 0); transform: translate(-5px, -5px); }
+  40% { clip: rect(0, 9999px, 0, 0); }
+  60% { clip: rect(0, 9999px, 20px, 0); transform: translate(5px, -2px); }
+  100% { clip: rect(0, 9999px, 0, 0); }
 }
 
-@keyframes glitch-anim2 {
-  0% { clip-path: inset(10% 0 70% 0); }
-  20% { clip-path: inset(30% 0 40% 0); }
-  40% { clip-path: inset(20% 0 50% 0); }
-  60% { clip-path: inset(25% 0 40% 0); }
-  80% { clip-path: inset(15% 0 70% 0); }
-  100% { clip-path: inset(10% 0 70% 0); }
+@keyframes glitchBottom {
+  0% { clip: rect(0, 9999px, 0, 0); }
+  20% { clip: rect(30px, 9999px, 70px, 0); transform: translate(5px, 0); }
+  40% { clip: rect(0, 9999px, 0, 0); }
+  60% { clip: rect(10px, 9999px, 50px, 0); transform: translate(-3px, 2px); }
+  100% { clip: rect(0, 9999px, 0, 0); }
 }
 
 @keyframes glitch-skew {
@@ -94,49 +83,26 @@ body {
   100% { transform: skew(-2deg); }
 }
 
-/* Botão */
 button {
-  margin-top: 40px;
+  margin-top: 20px;
+  padding: 10px 20px;
   background: black;
-  color: white;
   border: 2px solid white;
-  padding: 12px 30px;
+  color: white;
+  font-size: 1.2em;
   cursor: pointer;
-  font-size: 1rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  transition: all 0.2s;
-}
-
-button:hover {
-  background: white;
-  color: black;
-  box-shadow: 0 0 10px white;
-}
-
-/* Tela preta com pergunta */
-#screen2 {
-  background: black;
-}
-
-.question-container {
-  text-align: center;
+  z-index: 2;
 }
 
 .question {
-  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-size: 2em;
   margin-bottom: 20px;
-  color: white;
 }
 
-#answerInput {
+input {
+  padding: 10px;
   background: black;
-  border: 1px solid white;
+  border: 2px solid white;
   color: white;
-  padding: 12px;
-  font-size: 1rem;
-  width: 80%;
-  max-width: 300px;
-  outline: none;
-  text-align: center;
+  font-size: 1em;
 }
