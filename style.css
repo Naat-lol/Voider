@@ -14,36 +14,74 @@ body {
     line-height: 1.6;
 }
 
-/* Efeito de TV sem sinal (ruído branco) */
-.tv-static {
+/* Efeito de TV de tubo (CRT) */
+.crt-screen {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
-        linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000 0),
-        linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000 0);
-    background-size: 4px 4px;
-    background-position: 0 0, 2px 2px;
-    opacity: 0.1;
     z-index: 1;
-    animation: static 0.2s infinite;
+    overflow: hidden;
+}
+
+.crt-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0.2) 50%, rgba(0, 0, 0, 0.2) 50%);
+    background-size: 100% 4px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Efeito de estática de TV */
+.tv-static {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(to right, 
+            rgba(255, 255, 255, 0.03) 0%, 
+            rgba(255, 255, 255, 0.05) 50%, 
+            rgba(255, 255, 255, 0.03) 100%);
+    background-size: 200% 200%;
+    opacity: 0.3;
+    z-index: 1;
+    animation: static 0.8s infinite;
+    mix-blend-mode: overlay;
 }
 
 /* Efeito de scanlines */
 .scanlines {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background: linear-gradient(to bottom, 
         rgba(255, 255, 255, 0.03) 50%, 
-        rgba(0, 0, 0, 0.1) 50%);
+        rgba(0, 0, 0, 0.2) 50%);
     background-size: 100% 4px;
     pointer-events: none;
-    z-index: 2;
+    z-index: 3;
+}
+
+/* Efeito de flicker (piscar) */
+.flicker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    z-index: 4;
+    pointer-events: none;
+    animation: flicker 8s infinite;
 }
 
 /* Container principal */
@@ -60,7 +98,7 @@ body {
     z-index: 10;
     text-align: center;
     padding: 20px;
-    transition: opacity 0.5s ease;
+    transition: opacity 1s ease;
 }
 
 /* Estilo do título com efeito real de glitch */
@@ -74,7 +112,7 @@ body {
         -2px -2px 0 #ff00cc;
     letter-spacing: 4px;
     position: relative;
-    animation: glitch-skew 1s infinite linear alternate-reverse;
+    animation: glitch-skew 1.5s infinite linear alternate-reverse;
 }
 
 .glitch-text {
@@ -90,22 +128,23 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
+    opacity: 0.8;
 }
 
 .glitch-text::before {
-    animation: glitch-animation 0.6s infinite;
+    animation: glitch-animation 0.8s infinite;
     clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-    transform: translate(-2px, -2px);
+    transform: translate(-3px, -2px);
     color: #00ffcc;
-    opacity: 0.8;
+    text-shadow: 2px 2px 0 #ff00cc;
 }
 
 .glitch-text::after {
-    animation: glitch-animation 0.6s infinite reverse;
+    animation: glitch-animation 0.8s infinite reverse;
     clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
-    transform: translate(2px, 2px);
+    transform: translate(3px, 2px);
     color: #ff00cc;
-    opacity: 0.8;
+    text-shadow: -2px -2px 0 #00ffcc;
 }
 
 /* Estilo do botão */
@@ -161,13 +200,13 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: #000;
+    background: #1a1a1a;
     z-index: 20;
     padding: 20px;
     text-align: center;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 1s ease;
+    transition: opacity 1.5s ease;
 }
 
 .question-screen.visible {
@@ -246,72 +285,140 @@ body {
 @keyframes static {
     0% {
         background-position: 0 0;
+        opacity: 0.3;
+    }
+    20% {
+        opacity: 0.4;
+    }
+    40% {
+        opacity: 0.2;
+    }
+    60% {
+        opacity: 0.3;
+    }
+    80% {
+        opacity: 0.35;
     }
     100% {
-        background-position: 4px 4px;
+        background-position: 100% 100%;
+        opacity: 0.3;
+    }
+}
+
+@keyframes flicker {
+    0% {
+        background: transparent;
+    }
+    5% {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    6% {
+        background: transparent;
+    }
+    7% {
+        background: rgba(255, 255, 255, 0.02);
+    }
+    8% {
+        background: transparent;
+    }
+    45% {
+        background: transparent;
+    }
+    46% {
+        background: rgba(0, 0, 0, 0.3);
+    }
+    47% {
+        background: transparent;
+    }
+    48% {
+        background: rgba(0, 0, 0, 0.2);
+    }
+    49% {
+        background: transparent;
+    }
+    50% {
+        background: transparent;
+    }
+    95% {
+        background: transparent;
+    }
+    96% {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    97% {
+        background: transparent;
+    }
+    98% {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    99% {
+        background: transparent;
+    }
+    100% {
+        background: transparent;
     }
 }
 
 @keyframes glitch-animation {
     0% {
         clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-        transform: translate(-2px, -2px);
+        transform: translate(-3px, -2px);
     }
     20% {
         clip-path: polygon(0 25%, 100% 25%, 100% 60%, 0 60%);
-        transform: translate(3px, 3px);
+        transform: translate(4px, 3px);
     }
     40% {
         clip-path: polygon(0 50%, 100% 50%, 100% 75%, 0 75%);
-        transform: translate(-3px, -3px);
+        transform: translate(-4px, -3px);
     }
     60% {
         clip-path: polygon(0 15%, 100% 15%, 100% 50%, 0 50%);
-        transform: translate(2px, 2px);
+        transform: translate(3px, 2px);
     }
     80% {
         clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
-        transform: translate(-3px, -3px);
+        transform: translate(-3px, -2px);
     }
     100% {
         clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-        transform: translate(-2px, -2px);
+        transform: translate(-3px, -2px);
     }
 }
 
 @keyframes glitch-skew {
     0% {
-        transform: skew(0deg);
+        transform: skew(0deg) scale(1);
     }
     10% {
-        transform: skew(2deg);
+        transform: skew(2deg) scale(1.01);
     }
     20% {
-        transform: skew(-2deg);
+        transform: skew(-2deg) scale(1);
     }
     30% {
-        transform: skew(3deg);
+        transform: skew(3deg) scale(1.01);
     }
     40% {
-        transform: skew(-1deg);
+        transform: skew(-1deg) scale(1);
     }
     50% {
-        transform: skew(2deg);
+        transform: skew(2deg) scale(1.01);
     }
     60% {
-        transform: skew(-3deg);
+        transform: skew(-3deg) scale(1);
     }
     70% {
-        transform: skew(1deg);
+        transform: skew(1deg) scale(1.005);
     }
     80% {
-        transform: skew(-2deg);
+        transform: skew(-2deg) scale(1);
     }
     90% {
-        transform: skew(3deg);
+        transform: skew(3deg) scale(1.01);
     }
     100% {
-        transform: skew(0deg);
+        transform: skew(0deg) scale(1);
     }
 }
 
