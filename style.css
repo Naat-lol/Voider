@@ -21,85 +21,22 @@ body {
     text-align: center;
 }
 
-/* Título glitch */
-.glitch {
-/* Título glitch ultra */
-.glitch {
+/* Título grande e pesado */
+.title {
     font-size: 5rem;
     font-weight: 900;
-    position: relative;
     color: #fff;
     letter-spacing: 2px;
-    text-transform: uppercase;
-    animation: glitchShift 1s infinite linear;
+    margin-bottom: 80px; /* espaçamento maior do botão */
 }
 
-.glitch::before,
-.glitch::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    overflow: hidden;
-}
-
-.glitch::before {
-    color: #f0f;
-    animation: glitchTop 2s infinite linear;
-}
-
-.glitch::after {
-    color: #0ff;
-    animation: glitchBottom 2s infinite linear;
-}
-
-/* Movimento aleatório extra */
-@keyframes glitchShift {
-    0% { transform: translate(0,0) skew(0deg,0deg); }
-    10% { transform: translate(-3px,2px) skew(-1deg,1deg); }
-    20% { transform: translate(2px,-2px) skew(1deg,-1deg); }
-    30% { transform: translate(-1px,1px) skew(0deg,2deg); }
-    40% { transform: translate(1px,-1px) skew(2deg,0deg); }
-    50% { transform: translate(0,0) skew(0deg,0deg); }
-    60% { transform: translate(-2px,2px) skew(-1deg,1deg); }
-    70% { transform: translate(2px,-2px) skew(1deg,-1deg); }
-    80% { transform: translate(-1px,1px) skew(0deg,2deg); }
-    90% { transform: translate(1px,-1px) skew(2deg,0deg); }
-    100% { transform: translate(0,0) skew(0deg,0deg); }
-}
-
-/* Glitch extra para before e after */
-@keyframes glitchTop {
-    0% { clip: rect(0, 9999px, 0, 0); transform: translate(0,0); }
-    5% { clip: rect(5px, 9999px, 30px, 0); transform: translate(-5px,-2px); }
-    10% { clip: rect(10px, 9999px, 40px, 0); transform: translate(5px,2px); }
-    15% { clip: rect(15px, 9999px, 25px, 0); transform: translate(-3px,1px); }
-    20% { clip: rect(0, 9999px, 0, 0); transform: translate(0,0); }
-    25% { clip: rect(10px, 9999px, 35px, 0); transform: translate(2px,-2px); }
-    30% { clip: rect(0, 9999px, 0, 0); transform: translate(0,0); }
-    100% { clip: rect(0, 9999px, 0, 0); transform: translate(0,0); }
-}
-
-@keyframes glitchBottom {
-    0% { clip: rect(0, 9999px, 0, 0); transform: translate(0,0); }
-    5% { clip: rect(20px, 9999px, 50px, 0); transform: translate(3px,2px); }
-    10% { clip: rect(25px, 9999px, 45px, 0); transform: translate(-3px,-2px); }
-    15% { clip: rect(15px, 9999px, 40px, 0); transform: translate(2px,1px); }
-    20% { clip: rect(0, 9999px, 0, 0); transform: translate(0,0); }
-    25% { clip: rect(10px, 9999px, 35px, 0); transform: translate(-2px,2px); }
-    30% { clip: rect(0, 9999px, 0, 0); transform: translate(0,0); }
-    100% { clip: rect(0, 9999px, 0, 0); transform: translate(0,0); }
-}
-
-/* Botão estiloso */
+/* Botão elegante */
 .btn {
-    margin-top: 50px;
-    padding: 15px 40px;
+    padding: 15px 50px;
     font-size: 1.5rem;
     font-weight: bold;
     color: #fff;
-    background: linear-gradient(145deg, #333, #555);
+    background: linear-gradient(145deg, #222, #555);
     border: 2px solid #fff;
     border-radius: 12px;
     cursor: pointer;
