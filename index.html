@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glitch - Tema Sombrio</title>
+    <title>Voider</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="tv-static"></div>
-    <div class="scanlines"></div>
+    <div class="crt-screen">
+        <div class="crt-overlay"></div>
+        <div class="tv-static"></div>
+        <div class="scanlines"></div>
+        <div class="flicker"></div>
+    </div>
     
     <div class="container">
-        <h1 class="title glitch-text" data-text="GLITCH">GLITCH</h1>
+        <h1 class="title glitch-text" data-text="VOIDER">VOIDER</h1>
         <button class="void-button" id="voidButton">Fill The Void...</button>
     </div>
 
@@ -23,8 +27,11 @@
         <p class="hint">Dica: A resposta está em você</p>
     </div>
 
-    <audio id="lightSound" preload="auto">
-        <source src="light_switch.mp3" type="audio/mpeg">
+    <audio id="lightOffSound" preload="auto">
+        <source src="light_off.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="lightOnSound" preload="auto">
+        <source src="light_on.mp3" type="audio/mpeg">
     </audio>
 
     <script src="script.js"></script>
