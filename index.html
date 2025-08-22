@@ -1,26 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>The Voider</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="screen1" class="screen">
-    <h1 class="glitch" data-text="The Voider">The Voider</h1>
-    <button id="startButton">fill the fog</button>
-  </div>
-
-  <div id="screen2" class="screen hidden">
-    <p class="question">What do you seek?</p>
-    <input type="text" id="answer" autocomplete="off">
-  </div>
-
-  <audio id="lampSound" src="lamp.mp3"></audio>
-  <audio id="staticSound" src="static.mp3" loop></audio>
-
+  <!-- Fundo de ruído/estática -->
   <canvas id="noise"></canvas>
-  <script src="script.js"></script>
+
+  <!-- TELA 1: Título + botão -->
+  <main id="screen-start" aria-hidden="false">
+    <h1 class="glitch-title" aria-label="The Voider">
+      <span aria-hidden="true">The Voider</span>
+      The Voider
+      <span aria-hidden="true">The Voider</span>
+    </h1>
+
+    <button id="fillBtn" class="void-btn" type="button">fill the fog</button>
+  </main>
+
+  <!-- TELA 2: Preta total com pergunta -->
+  <section id="screen-question" aria-hidden="true">
+    <div class="q-wrap">
+      <p class="q-text" id="question">Quem sussurra dentro do vazio?</p>
+      <form id="answerForm" autocomplete="off">
+        <input id="answerInput" type="text" placeholder="responda..." required />
+        <button id="sendAnswer" type="submit">enviar</button>
+      </form>
+    </div>
+  </section>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
