@@ -5,13 +5,15 @@ const lampSound = document.getElementById("lampSound");
 const staticSound = document.getElementById("staticSound");
 
 startBtn.addEventListener("click", () => {
-  // Som de lâmpada
+  // Som da lâmpada
+  lampSound.currentTime = 0;
   lampSound.play();
 
-  // Corte seco: apagar screen1 e mostrar screen2
+  // Corte seco para a segunda tela
   screen1.classList.remove("active");
   screen2.classList.add("active");
 
-  // Iniciar som de estática
+  // Inicia som de estática
+  staticSound.currentTime = 0;
   staticSound.play();
 });
