@@ -1,263 +1,311 @@
-/* styles.css */
-/* Estética: TV de tubo preta e branca, tipografia máquina de escrever, glitch no título,
-   botão mais para baixo e tela 2 minimalista e perturbadora.
-   Arquivo propositalmente longo para atender ao pedido estético e técnico. */
+/* styles.css - invista bastante na estética (preto e branco, tv de tubo, glitch) */
 
-/* Reset minimal */
+/* Reset mínimo */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html,body { height: 100%; background: #0b0b0b; color: #e6e6e6; font-family: 'Special Elite', monospace; }
+html,body,#app { height: 100%; width: 100%; }
 
-/* Layout das telas */
-.screen { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.screen:not(.active) { display: none; }
+/* Paleta e base */
+:root{
+  --bg-very-dark: #0a0a0a;
+  --bg-dark: #111111;
+  --paper: #dcdcdc;
+  --muted: #9a9a9a;
+  --glass: rgba(255,255,255,0.03);
+  --accent: #ffffff;
+  --glow: rgba(255,255,255,0.04);
+  --tv-scan: rgba(0,0,0,0.06);
+  --mono: "Roboto Mono", "Courier New", monospace;
+}
 
-/* TV frame - cria a sensação de aparelho antigo */
-.tv-frame {
-  width: min(1100px, 92vw);
-  height: min(700px, 84vh);
-  background: linear-gradient(180deg, #070707 0%, #131313 60%, #0b0b0b 100%);
-  border-radius: 12px;
-  box-shadow: 0 30px 90px rgba(0,0,0,0.85), inset 0 0 120px rgba(255,255,255,0.02);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 48px 28px;
+/* Body style */
+body{
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.015) 0%, rgba(0,0,0,1) 70%), var(--bg-very-dark);
+  color: var(--accent);
+  font-family: var(--mono);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
 }
 
-/* overlay que simula estática visual (ruído) */
-.tv-static-overlay {
+/* Centering container */
+#app{
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 4vh 3vw;
+}
+
+/* Screen container */
+.screen{
+  width: min(980px, 96vw);
+  max-width: 1100px;
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.25rem;
+  position: relative;
+}
+
+/* TV frame look */
+.tv-frame{
+  width: 100%;
+  height: 62vh;
+  max-height: 720px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.25));
+  border-radius: 14px;
+  padding: 2.5rem 2rem;
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.02),
+    0 0 120px rgba(0,0,0,0.6);
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.03);
+  backdrop-filter: blur(1px);
+}
+
+/* TV tube texture: wide subtle vignette and noise overlay */
+.tv-frame::before{
+  content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: radial-gradient(circle at 50% 20%, rgba(255,255,255,0.02) 0%, transparent 20%),
-                    repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 3px);
-  mix-blend-mode: screen;
-  filter: grayscale(1) contrast(1.1) brightness(0.7);
-  animation: static-flicker 0.14s steps(2) infinite;
-  z-index: 10;
-  opacity: 0.65;
+  background:
+    radial-gradient(ellipse at center, rgba(255,255,255,0.015), transparent 35%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0 1px, transparent 1px 3px);
+  mix-blend-mode: overlay;
+  z-index: 2;
 }
 
-/* scanlines (linhas horizontais finas) */
-.scanlines {
-  position: absolute;
-  inset: 0;
-  background-image: linear-gradient(transparent 50%, rgba(0,0,0,0.25) 51%);
-  background-size: 100% 3px;
-  pointer-events: none;
-  mix-blend-mode: multiply;
-  z-index: 12;
-  opacity: 0.6;
-}
-
-/* vinheta escura nas bordas para reforçar profundidade */
-.vignette {
+/* Inner CRT static shadow lines */
+.tv-frame::after{
+  content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse at center, rgba(255,255,255,0) 0%, rgba(0,0,0,0.65) 70%, rgba(0,0,0,0.95) 100%);
-  z-index: 15;
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.28) 100%);
+  z-index: 6;
 }
 
-/* título central - glitch */
-.title-wrap { z-index: 20; width: 100%; display:flex; align-items:center; justify-content:center; margin-top:10vh; user-select:none; }
-h1 {
-  font-size: clamp(36px, 6vw, 96px);
-  letter-spacing: 6px;
+/* Title area */
+h1#title{
+  font-size: clamp(36px, 9vw, 112px);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #f6f6f6;
-  position: relative;
-  line-height: 1;
-  margin: 0;
-  display: inline-block;
-  text-align:center;
-  padding: 6px 12px;
+  color: var(--accent);
   mix-blend-mode: screen;
-  filter: contrast(115%) saturate(0%);
+  position: relative;
+  z-index: 10;
+  margin-top: -2vh;
+  line-height: 0.85;
+  text-align: center;
+  user-select: none;
 }
 
-/* glitch effect: camadas deslocadas e mascaradas */
-.glitch {
-  --g-color: #e6e6e6;
-  color: var(--g-color);
+/* Glitch effect layered copies via pseudo elements */
+.glitch{
   position: relative;
+  display: inline-block;
+  font-weight: 700;
 }
+
+/* two layered clipped text slices with offsets for glitch */
 .glitch::before,
-.glitch::after {
+.glitch::after{
   content: attr(data-text);
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
-  overflow: visible;
+  overflow: hidden;
   clip-path: inset(0 0 0 0);
-  pointer-events: none;
-}
-.glitch::before {
-  color: rgba(255,255,255,0.85);
-  transform: translateX(-6px);
-  text-shadow: -2px 0px 0 rgba(0,0,0,0.6);
-  mix-blend-mode: screen;
-  animation: glitch-anim-1 2.2s infinite linear;
   opacity: 0.9;
-}
-.glitch::after {
-  color: rgba(230,230,230,0.75);
-  transform: translateX(6px);
-  text-shadow: 2px 0px 0 rgba(0,0,0,0.6);
-  animation: glitch-anim-2 3s infinite linear;
-  opacity: 0.8;
-}
-
-/* botao fill the fog */
-.cta-wrap { width: 100%; display:flex; align-items:center; justify-content:center; margin-bottom: 10vh; z-index: 22; }
-.btn-glass {
-  font-family: 'Special Elite', monospace;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
-  color: #eaeaea;
-  padding: 14px 28px;
-  font-size: 18px;
-  letter-spacing: 2px;
-  border-radius: 999px;
-  cursor: pointer;
-  backdrop-filter: blur(2px);
-  transition: transform 120ms ease, box-shadow 120ms ease;
-  user-select: none;
-  text-transform: lowercase;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-}
-.btn-glass:active { transform: translateY(2px) scale(0.995); }
-.btn-glass:hover { box-shadow: 0 10px 40px rgba(0,0,0,0.75); }
-
-/* tela 2 - pergunta */
-#screen-2 {
-  background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 50;
-}
-
-/* caixa central da pergunta */
-.question-wrap { width: 100%; max-width: 840px; padding: 28px; display:flex; align-items:center; justify-content:center; }
-.question-box {
-  width: 100%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border-radius: 8px;
-  padding: 42px;
-  border: 1px solid rgba(255,255,255,0.03);
-  box-shadow: 0 30px 90px rgba(0,0,0,0.9);
-  text-align: center;
-  position: relative;
-  z-index: 60;
-  transform: translateZ(0);
-}
-
-/* texto da pergunta, fonte máquina de escrever, grande e direta */
-.question-text {
-  font-size: clamp(18px, 3.2vw, 34px);
-  color: #dcdcdc;
-  margin-bottom: 26px;
-  letter-spacing: 0.6px;
-}
-
-/* form estilizado */
-#answer-form { display:flex; gap: 12px; align-items:center; justify-content:center; flex-wrap:wrap; }
-#answer-input {
-  width: min(72%, 520px);
-  min-width: 160px;
-  padding: 12px 14px;
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.06);
-  background: rgba(0,0,0,0.55);
-  color: #e9e9e9;
-  font-family: 'Special Elite', monospace;
-  font-size: 16px;
-  outline: none;
-  box-shadow: inset 0 -10px 30px rgba(0,0,0,0.6);
-}
-#answer-input::placeholder { color: rgba(255,255,255,0.3); }
-#submit-btn {
-  padding: 10px 18px;
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.06);
-  background: rgba(255,255,255,0.04);
-  color: #eaeaea;
-  cursor: pointer;
-  font-family: 'Special Elite', monospace;
-  letter-spacing: 1px;
-}
-
-/* plano de fundo sutil de estática escura para a segunda tela */
-.dark-static {
-  position: absolute;
-  inset: 0;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"><filter id="f"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23f)" fill="black" opacity="0.08"/></svg>');
-  background-size: cover;
-  z-index: 10;
-  mix-blend-mode: multiply;
-  opacity: 0.6;
-}
-
-/* animações */
-@keyframes static-flicker {
-  0% { opacity: 0.55; transform: translateY(0) scale(1); }
-  10% { opacity: 0.85; transform: translateY(-0.6px) scale(1.001); }
-  60% { opacity: 0.65; transform: translateY(0) scale(1); }
-  100% { opacity: 0.7; transform: translateY(-0.3px) scale(1); }
-}
-
-/* glitch keyframes - recortes rápidos e deslocamentos */
-@keyframes glitch-anim-1 {
-  0% { clip-path: inset(0 0 0 0); transform: translate(-6px,0) skewX(-0.5deg); opacity: 0.9; }
-  6% { clip-path: inset(0 0 50% 0); transform: translate(-12px,-2px) skewX(-1deg); opacity: 1; }
-  10% { clip-path: inset(20% 0 0 0); transform: translate(-3px,1px) skewX(0.2deg); opacity: 0.8; }
-  20% { clip-path: inset(0 0 0 0); transform: translate(-6px,0); opacity: 0.9; }
-  100% { clip-path: inset(0 0 0 0); transform: translate(-6px,0); opacity: 0.9; }
-}
-@keyframes glitch-anim-2 {
-  0% { clip-path: inset(0 0 0 0); transform: translate(6px,0) skewX(0.4deg); opacity: 0.85; }
-  8% { clip-path: inset(40% 0 0 0); transform: translate(14px,2px) skewX(1deg); opacity: 0.95; }
-  14% { clip-path: inset(0 0 20% 0); transform: translate(4px,-1px) skewX(-0.2deg); opacity: 0.8; }
-  100% { clip-path: inset(0 0 0 0); transform: translate(6px,0); opacity: 0.85; }
-}
-
-/* pequenas responsividades e toques visuais */
-@media (max-width:720px) {
-  .tv-frame { padding: 28px 14px; }
-  .question-box { padding: 28px; }
-  h1 { font-size: clamp(28px, 8vw, 56px); letter-spacing: 3px; }
-}
-
-/* efeitos adicionais para sensação analógica */
-.tv-frame::after {
-  content: '';
-  position: absolute;
-  inset: 0;
+  z-index: 8;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
-  mix-blend-mode: overlay;
-  z-index: 5;
 }
 
-/* pequenos detalhes para deixar a estética mais 'cru' e analógica */
-.btn-glass::after {
-  content: '';
-  position: absolute;
-  left: 4px;
-  top: 4px;
-  width: calc(100% - 8px);
-  height: calc(100% - 8px);
-  border-radius: 999px;
-  pointer-events: none;
-  opacity: 0.06;
+/* monochrome offsets for the feel */
+.glitch::before{
+  color: rgba(255,255,255,0.85);
+  transform: translate3d(-4px, -2px, 0);
+  mix-blend-mode: lighten;
+  filter: grayscale(100%) contrast(1.1);
+  animation: glitch-anim-1 3s infinite linear;
+}
+
+.glitch::after{
+  color: rgba(200,200,200,0.7);
+  transform: translate3d(3px, 2px, 0);
   mix-blend-mode: screen;
+  filter: grayscale(100%) contrast(0.9);
+  animation: glitch-anim-2 2.2s infinite linear;
 }
 
-/* foco e acessibilidade */
-#answer-input:focus { box-shadow: 0 0 0 3px rgba(255,255,255,0.03), inset 0 -8px 30px rgba(0,0,0,0.6); }
-/* fim do arquivo CSS - estilo extenso para atender ao pedido visual */
+/* Small slicing motion for the main text */
+@keyframes glitch-anim-1{
+  0%{ clip-path: inset(0% 0 0 0); transform: translate3d(-3px,-1px,0) skewX(-0.2deg); }
+  7%{ clip-path: inset(12% 0 60% 0); transform: translate3d(-14px,-4px,0) skewX(-0.6deg); }
+  14%{ clip-path: inset(0% 0 0 0); transform: translate3d(-2px,-1px,0) skewX(0deg); }
+  21%{ clip-path: inset(30% 0 40% 0); transform: translate3d(-8px,-2px,0) skewX(-0.4deg); }
+  35%{ clip-path: inset(0% 0 0 0); transform: translate3d(-1px,0,0); }
+  100%{ clip-path: inset(0% 0 0 0); transform: translate3d(-3px,-1px,0); }
+}
+
+@keyframes glitch-anim-2{
+  0%{ clip-path: inset(0% 0 0% 0); transform: translate3d(2px,1px,0) skewX(0.2deg); }
+  10%{ clip-path: inset(40% 0 30% 0); transform: translate3d(10px,6px,0) skewX(0.8deg); }
+  20%{ clip-path: inset(0% 0 0% 0); transform: translate3d(1px,1px,0); }
+  50%{ clip-path: inset(15% 0 55% 0); transform: translate3d(6px,2px,0); }
+  100%{ clip-path: inset(0% 0 0% 0); transform: translate3d(3px,2px,0); }
+}
+
+/* static layer - animated noise using CSS multiple layers and keyframes (subtle) */
+.static-layer{
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0.45;
+  mix-blend-mode: overlay;
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(255,255,255,0.02), transparent 10%),
+    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.015), transparent 12%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 1px, rgba(0,0,0,0.0) 1px 3px);
+  filter: contrast(140%) brightness(90%);
+  animation: static-float 1.8s infinite steps(3,end), grain-move 0.6s infinite linear;
+}
+
+/* subtle scanlines to mimic CRT */
+.tv-frame .scanlines{
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(transparent 60%, rgba(0,0,0,0.06) 61%);
+  z-index: 7;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+/* scanline movement */
+@keyframes grain-move{
+  0%{ transform: translateY(0); }
+  100%{ transform: translateY(-6px); }
+}
+@keyframes static-float{
+  0%{ opacity: 0.44; transform: translate3d(0,0,0) scale(1); }
+  50%{ opacity: 0.52; transform: translate3d(.6px,-1px,0) scale(1.01); }
+  100%{ opacity: 0.42; transform: translate3d(-.6px,1px,0) scale(0.99); }
+}
+
+/* controls area (button bottom) */
+.controls{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 12;
+  margin-top: -1.6rem;
+}
+
+/* Button aesthetics */
+.btn{
+  appearance: none;
+  -webkit-appearance: none;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 0.9rem 2.1rem;
+  border-radius: 999px;
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: lowercase;
+  cursor: default; /* emphasize it does nothing */
+  user-select: none;
+  transition: transform 250ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.55), inset 0 -2px 0 rgba(255,255,255,0.02);
+  font-size: clamp(12px, 2.4vw, 18px);
+}
+
+/* micro hover jitter to feel alive but still inert */
+.btn:hover{
+  transform: translateY(-3px) scale(1.01) rotate(-0.1deg);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.7);
+}
+
+/* footer credits */
+.credits{
+  margin-top: .8rem;
+  opacity: 0.55;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* responsive */
+@media (max-width:720px){
+  .tv-frame{ padding: 1.6rem; height: 56vh; }
+  .controls{ margin-top: -0.8rem; }
+  h1#title{ font-size: clamp(24px, 11vw, 48px); }
+}
+
+/* extra aesthetic touches and accessibility */
+@media (prefers-reduced-motion: reduce){
+  .glitch::before, .glitch::after, .static-layer{ animation: none; transform: none; }
+  .btn{ transition: none; }
+}
+
+/* visual dithering overlay for more TV feel */
+.dither-overlay{
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  pointer-events: none;
+  background-image:
+    linear-gradient(90deg, rgba(255,255,255,0.01) 0, transparent 12%),
+    linear-gradient(0deg, rgba(0,0,0,0.02) 0, transparent 60%);
+  mix-blend-mode: multiply;
+  opacity: 0.25;
+}
+
+/* optional focus ring for keyboard users */
+.btn:focus{
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.02), 0 8px 30px rgba(0,0,0,0.7);
+}
+
+/* decorative corners like an old TV shell */
+.tv-frame .corner{
+  position: absolute;
+  width: 12%;
+  height: 18%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+  z-index: 3;
+  pointer-events: none;
+}
+.tv-frame .corner.top-left{ left: 0; top: 0; transform: skewX(-6deg) skewY(2deg); }
+.tv-frame .corner.top-right{ right: 0; top: 0; transform: skewX(6deg) skewY(2deg); }
+.tv-frame .corner.bottom-left{ left: 0; bottom: 0; transform: skewX(-6deg) skewY(-2deg); }
+.tv-frame .corner.bottom-right{ right: 0; bottom: 0; transform: skewX(6deg) skewY(-2deg); }
+
+/* slight flicker animation across whole frame */
+@keyframes frame-flicker{
+  0%{ opacity: 1; filter: brightness(1); }
+  10%{ opacity: 0.95; filter: brightness(0.92); }
+  11%{ opacity: 1; filter: brightness(1); }
+  50%{ opacity: 0.98; filter: brightness(0.96); }
+  100%{ opacity: 1; filter: brightness(1); }
+}
+.tv-frame{ animation: frame-flicker 6s infinite linear; }
+
+/* ensure text remains crisp on dark background */
+h1, .credits, .btn{ text-shadow: 0 1px 0 rgba(0,0,0,0.6); }
+
+/* add an invisible live region for screen readers describing the static aesthetic */
+.visually-hidden{
+  position: absolute!important;
+  height: 1px;width: 1px;
+  overflow: hidden; clip: rect(1px,1px,1px,1px);
+  white-space: nowrap; border: 0; padding: 0; margin: -1px;
+}
+
+/* end of styles - plenty of lines for the requested detail */
