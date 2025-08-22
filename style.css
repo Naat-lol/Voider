@@ -14,7 +14,7 @@ body {
     line-height: 1.6;
 }
 
-/* Efeito de TV de tubo (CRT) */
+/* CRT base */
 .crt-screen {
     position: fixed;
     top: 0;
@@ -31,13 +31,13 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(rgba(18, 16, 16, 0.2) 50%, rgba(0, 0, 0, 0.2) 50%);
+    background: linear-gradient(rgba(18, 16, 16, 0.25) 50%, rgba(0, 0, 0, 0.25) 50%);
     background-size: 100% 4px;
     z-index: 2;
     pointer-events: none;
 }
 
-/* Efeito de estática de TV */
+/* Estática */
 .tv-static {
     position: absolute;
     top: 0;
@@ -46,17 +46,17 @@ body {
     height: 100%;
     background: 
         linear-gradient(to right, 
-            rgba(255, 255, 255, 0.03) 0%, 
-            rgba(255, 255, 255, 0.05) 50%, 
-            rgba(255, 255, 255, 0.03) 100%);
+            rgba(255, 255, 255, 0.06) 0%, 
+            rgba(255, 255, 255, 0.1) 50%, 
+            rgba(255, 255, 255, 0.06) 100%);
     background-size: 200% 200%;
-    opacity: 0.3;
+    opacity: 0.6;
     z-index: 1;
-    animation: static 0.8s infinite;
+    animation: static 0.4s infinite;
     mix-blend-mode: overlay;
 }
 
-/* Efeito de scanlines */
+/* Scanlines */
 .scanlines {
     position: absolute;
     top: 0;
@@ -64,14 +64,15 @@ body {
     width: 100%;
     height: 100%;
     background: linear-gradient(to bottom, 
-        rgba(255, 255, 255, 0.03) 50%, 
-        rgba(0, 0, 0, 0.2) 50%);
-    background-size: 100% 4px;
+        rgba(255, 255, 255, 0.05) 50%, 
+        rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 3px;
     pointer-events: none;
     z-index: 3;
+    opacity: 0.5;
 }
 
-/* Efeito de flicker (piscar) */
+/* Flicker */
 .flicker {
     position: absolute;
     top: 0;
@@ -101,23 +102,18 @@ body {
     transition: opacity 1s ease;
 }
 
-/* Estilo do título com efeito real de glitch */
+/* Título com glitch */
 .title {
     font-family: 'Orbitron', sans-serif;
     font-size: 7rem;
     margin-bottom: 2rem;
     color: #8a2be2;
     text-shadow: 
-        2px 2px 0 #00ffcc, 
-        -2px -2px 0 #ff00cc;
-    letter-spacing: 4px;
+        3px 3px 0 #00ffcc, 
+        -3px -3px 0 #ff00cc;
+    letter-spacing: 6px;
     position: relative;
-    animation: glitch-skew 1.5s infinite linear alternate-reverse;
-}
-
-.glitch-text {
-    position: relative;
-    display: inline-block;
+    animation: glitch-skew 1s infinite linear alternate-reverse;
 }
 
 .glitch-text::before,
@@ -132,22 +128,22 @@ body {
 }
 
 .glitch-text::before {
-    animation: glitch-animation 0.8s infinite;
+    animation: glitch-animation 0.3s infinite;
     clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-    transform: translate(-3px, -2px);
+    transform: translate(-5px, -3px);
     color: #00ffcc;
-    text-shadow: 2px 2px 0 #ff00cc;
+    text-shadow: 3px 3px 0 #ff00cc;
 }
 
 .glitch-text::after {
-    animation: glitch-animation 0.8s infinite reverse;
+    animation: glitch-animation 0.3s infinite reverse;
     clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
-    transform: translate(3px, 2px);
+    transform: translate(5px, 3px);
     color: #ff00cc;
-    text-shadow: -2px -2px 0 #00ffcc;
+    text-shadow: -3px -3px 0 #00ffcc;
 }
 
-/* Estilo do botão */
+/* Botão */
 .void-button {
     background: rgba(106, 90, 205, 0.2);
     color: #d8bfd8;
@@ -259,7 +255,7 @@ body {
     font-size: 0.9rem;
 }
 
-/* Classes utilitárias */
+/* Utilitários */
 .hidden {
     display: none !important;
 }
@@ -274,7 +270,7 @@ body {
     z-index: 15;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 1s ease;
+    transition: opacity 0.5s ease;
 }
 
 .black-screen.visible {
@@ -283,157 +279,41 @@ body {
 
 /* Animações */
 @keyframes static {
-    0% {
-        background-position: 0 0;
-        opacity: 0.3;
-    }
-    20% {
-        opacity: 0.4;
-    }
-    40% {
-        opacity: 0.2;
-    }
-    60% {
-        opacity: 0.3;
-    }
-    80% {
-        opacity: 0.35;
-    }
-    100% {
-        background-position: 100% 100%;
-        opacity: 0.3;
-    }
+    0%, 100% { background-position: 0 0; opacity: 0.6; }
+    50% { background-position: 100% 100%; opacity: 0.8; }
 }
 
 @keyframes flicker {
-    0% {
-        background: transparent;
-    }
-    5% {
-        background: rgba(255, 255, 255, 0.05);
-    }
-    6% {
-        background: transparent;
-    }
-    7% {
-        background: rgba(255, 255, 255, 0.02);
-    }
-    8% {
-        background: transparent;
-    }
-    45% {
-        background: transparent;
-    }
-    46% {
-        background: rgba(0, 0, 0, 0.3);
-    }
-    47% {
-        background: transparent;
-    }
-    48% {
-        background: rgba(0, 0, 0, 0.2);
-    }
-    49% {
-        background: transparent;
-    }
-    50% {
-        background: transparent;
-    }
-    95% {
-        background: transparent;
-    }
-    96% {
-        background: rgba(255, 255, 255, 0.1);
-    }
-    97% {
-        background: transparent;
-    }
-    98% {
-        background: rgba(255, 255, 255, 0.05);
-    }
-    99% {
-        background: transparent;
-    }
-    100% {
-        background: transparent;
-    }
+    0%, 45%, 50%, 95%, 100% { background: transparent; }
+    5% { background: rgba(255, 255, 255, 0.05); }
+    7% { background: rgba(255, 255, 255, 0.02); }
+    46% { background: rgba(0, 0, 0, 0.3); }
+    48% { background: rgba(0, 0, 0, 0.2); }
+    96% { background: rgba(255, 255, 255, 0.1); }
+    98% { background: rgba(255, 255, 255, 0.05); }
 }
 
 @keyframes glitch-animation {
-    0% {
-        clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-        transform: translate(-3px, -2px);
-    }
-    20% {
-        clip-path: polygon(0 25%, 100% 25%, 100% 60%, 0 60%);
-        transform: translate(4px, 3px);
-    }
-    40% {
-        clip-path: polygon(0 50%, 100% 50%, 100% 75%, 0 75%);
-        transform: translate(-4px, -3px);
-    }
-    60% {
-        clip-path: polygon(0 15%, 100% 15%, 100% 50%, 0 50%);
-        transform: translate(3px, 2px);
-    }
-    80% {
-        clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
-        transform: translate(-3px, -2px);
-    }
-    100% {
-        clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-        transform: translate(-3px, -2px);
-    }
+    0% { transform: translate(-5px, -3px); }
+    20% { transform: translate(4px, 3px); }
+    40% { transform: translate(-4px, -3px); }
+    60% { transform: translate(3px, 2px); }
+    80% { transform: translate(-3px, -2px); }
+    100% { transform: translate(-5px, -3px); }
 }
 
 @keyframes glitch-skew {
-    0% {
-        transform: skew(0deg) scale(1);
-    }
-    10% {
-        transform: skew(2deg) scale(1.01);
-    }
-    20% {
-        transform: skew(-2deg) scale(1);
-    }
-    30% {
-        transform: skew(3deg) scale(1.01);
-    }
-    40% {
-        transform: skew(-1deg) scale(1);
-    }
-    50% {
-        transform: skew(2deg) scale(1.01);
-    }
-    60% {
-        transform: skew(-3deg) scale(1);
-    }
-    70% {
-        transform: skew(1deg) scale(1.005);
-    }
-    80% {
-        transform: skew(-2deg) scale(1);
-    }
-    90% {
-        transform: skew(3deg) scale(1.01);
-    }
-    100% {
-        transform: skew(0deg) scale(1);
-    }
+    0%, 100% { transform: skew(0deg) scale(1); }
+    10% { transform: skew(2deg) scale(1.02); }
+    30% { transform: skew(-2deg) scale(1); }
+    50% { transform: skew(3deg) scale(1.02); }
+    70% { transform: skew(-3deg) scale(1); }
+    90% { transform: skew(2deg) scale(1.01); }
 }
 
-/* Responsividade */
+/* Responsivo */
 @media (max-width: 768px) {
-    .title {
-        font-size: 4rem;
-    }
-    
-    .void-button {
-        padding: 12px 30px;
-        font-size: 1.2rem;
-    }
-    
-    .question-text {
-        font-size: 1.8rem;
-    }
+    .title { font-size: 4rem; }
+    .void-button { padding: 12px 30px; font-size: 1.2rem; }
+    .question-text { font-size: 1.8rem; }
 }
