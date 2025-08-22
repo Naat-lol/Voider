@@ -1,39 +1,32 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voider</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Voider</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="crt-screen">
-        <div class="crt-overlay"></div>
-        <div class="tv-static"></div>
-        <div class="scanlines"></div>
-        <div class="flicker"></div>
-    </div>
-    
-    <div class="container">
-        <h1 class="title glitch-text" data-text="VOIDER">VOIDER</h1>
-        <button class="void-button" id="voidButton">Fill The Void...</button>
-    </div>
+  <!-- Tela Inicial -->
+  <div id="screen1" class="screen active">
+    <h1 class="glitch" data-text="The Voider">The Voider</h1>
+    <button id="startBtn">fill the fog</button>
+  </div>
 
-    <div class="question-screen hidden">
-        <h2 class="question-text">O que você mais teme no vazio?</h2>
-        <input type="text" class="answer-input" placeholder="Digite sua resposta...">
-        <button class="submit-answer">Enviar</button>
-        <p class="hint">Dica: A resposta está em você</p>
+  <!-- Tela Preta com Pergunta -->
+  <div id="screen2" class="screen">
+    <div class="question-container">
+      <p class="question">What do you see in the dark?</p>
+      <input type="text" id="answerInput" placeholder="Type your answer...">
     </div>
+  </div>
 
-    <audio id="lightOffSound" preload="auto">
-        <source src="light_off.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="lightOnSound" preload="auto">
-        <source src="light_on.mp3" type="audio/mpeg">
-    </audio>
+  <!-- Sons -->
+  <audio id="lampSound" src="lamp.mp3" preload="auto"></audio>
+  <audio id="staticSound" src="static.mp3" loop preload="auto"></audio>
 
-    <script src="script.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>    <script src="script.js"></script>
 </body>
 </html>
