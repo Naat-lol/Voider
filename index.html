@@ -7,24 +7,20 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Tela Inicial -->
-  <div id="screen1" class="screen active">
+  <div id="screen1" class="screen">
     <h1 class="glitch" data-text="The Voider">The Voider</h1>
-    <button id="startBtn">fill the fog</button>
+    <button id="startButton">fill the fog</button>
   </div>
 
-  <!-- Tela Preta com Pergunta -->
-  <div id="screen2" class="screen">
-    <div class="question-container">
-      <p class="question">What do you see in the dark?</p>
-      <input type="text" id="answerInput" placeholder="Type your answer...">
-    </div>
+  <div id="screen2" class="screen hidden">
+    <p class="question">What do you seek?</p>
+    <input type="text" id="answer" autocomplete="off">
   </div>
 
-  <!-- Sons -->
-  <audio id="lampSound" src="lamp.mp3" preload="auto"></audio>
-  <audio id="staticSound" src="static.mp3" loop preload="auto"></audio>
+  <audio id="lampSound" src="lamp.mp3"></audio>
+  <audio id="staticSound" src="static.mp3" loop></audio>
 
+  <canvas id="noise"></canvas>
   <script src="script.js"></script>
 </body>
 </html>
