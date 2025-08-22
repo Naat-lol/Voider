@@ -1,311 +1,120 @@
-/* styles.css - invista bastante na estética (preto e branco, tv de tubo, glitch) */
+/* styles.css */
 
 /* Reset mínimo */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html,body,#app { height: 100%; width: 100%; }
 
-/* Paleta e base */
 :root{
-  --bg-very-dark: #0a0a0a;
-  --bg-dark: #111111;
-  --paper: #dcdcdc;
-  --muted: #9a9a9a;
-  --glass: rgba(255,255,255,0.03);
-  --accent: #ffffff;
-  --glow: rgba(255,255,255,0.04);
-  --tv-scan: rgba(0,0,0,0.06);
+  --bg-dark: #0a0a0a;
+  --bg-light: #1a1a1a;
+  --accent: #f5f5f5;
   --mono: "Roboto Mono", "Courier New", monospace;
 }
 
-/* Body style */
+/* Fundo estilo TV de tubo sem ruído branco */
 body{
-  background: radial-gradient(ellipse at center, rgba(255,255,255,0.015) 0%, rgba(0,0,0,1) 70%), var(--bg-very-dark);
+  background: radial-gradient(circle at center, var(--bg-light) 0%, var(--bg-dark) 80%);
   color: var(--accent);
   font-family: var(--mono);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
 
-/* Centering container */
-#app{
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 4vh 3vw;
-}
-
-/* Screen container */
+/* Tela centralizada */
 .screen{
-  width: min(980px, 96vw);
-  max-width: 1100px;
-  min-height: 70vh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 2.25rem;
-  position: relative;
-}
-
-/* TV frame look */
-.tv-frame{
-  width: 100%;
-  height: 62vh;
-  max-height: 720px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.25));
-  border-radius: 14px;
-  padding: 2.5rem 2rem;
-  box-shadow:
-    0 10px 40px rgba(0,0,0,0.7),
-    inset 0 1px 0 rgba(255,255,255,0.02),
-    0 0 120px rgba(0,0,0,0.6);
-  display: grid;
-  place-items: center;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.03);
-  backdrop-filter: blur(1px);
-}
-
-/* TV tube texture: wide subtle vignette and noise overlay */
-.tv-frame::before{
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at center, rgba(255,255,255,0.015), transparent 35%),
-    repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0 1px, transparent 1px 3px);
-  mix-blend-mode: overlay;
-  z-index: 2;
-}
-
-/* Inner CRT static shadow lines */
-.tv-frame::after{
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: linear-gradient(180deg, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.28) 100%);
-  z-index: 6;
-}
-
-/* Title area */
-h1#title{
-  font-size: clamp(36px, 9vw, 112px);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--accent);
-  mix-blend-mode: screen;
-  position: relative;
-  z-index: 10;
-  margin-top: -2vh;
-  line-height: 0.85;
   text-align: center;
+  gap: 3rem;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0.02) 0 2px,
+    transparent 2px 4px
+  ); /* leve linhas horizontais para parecer CRT */
+}
+
+/* Título glitch */
+h1#title{
+  font-size: clamp(40px, 10vw, 120px);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  position: relative;
+  color: var(--accent);
   user-select: none;
 }
-
-/* Glitch effect layered copies via pseudo elements */
-.glitch{
-  position: relative;
-  display: inline-block;
-  font-weight: 700;
-}
-
-/* two layered clipped text slices with offsets for glitch */
 .glitch::before,
 .glitch::after{
   content: attr(data-text);
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 0; top: 0;
   width: 100%;
   overflow: hidden;
-  clip-path: inset(0 0 0 0);
-  opacity: 0.9;
-  z-index: 8;
-  pointer-events: none;
 }
-
-/* monochrome offsets for the feel */
 .glitch::before{
-  color: rgba(255,255,255,0.85);
-  transform: translate3d(-4px, -2px, 0);
-  mix-blend-mode: lighten;
-  filter: grayscale(100%) contrast(1.1);
-  animation: glitch-anim-1 3s infinite linear;
+  left: 2px;
+  text-shadow: -2px 0 #fff;
+  animation: glitch-anim-1 2s infinite linear alternate-reverse;
 }
-
 .glitch::after{
-  color: rgba(200,200,200,0.7);
-  transform: translate3d(3px, 2px, 0);
-  mix-blend-mode: screen;
-  filter: grayscale(100%) contrast(0.9);
-  animation: glitch-anim-2 2.2s infinite linear;
+  left: -2px;
+  text-shadow: 2px 0 #aaa;
+  animation: glitch-anim-2 3s infinite linear alternate-reverse;
 }
-
-/* Small slicing motion for the main text */
 @keyframes glitch-anim-1{
-  0%{ clip-path: inset(0% 0 0 0); transform: translate3d(-3px,-1px,0) skewX(-0.2deg); }
-  7%{ clip-path: inset(12% 0 60% 0); transform: translate3d(-14px,-4px,0) skewX(-0.6deg); }
-  14%{ clip-path: inset(0% 0 0 0); transform: translate3d(-2px,-1px,0) skewX(0deg); }
-  21%{ clip-path: inset(30% 0 40% 0); transform: translate3d(-8px,-2px,0) skewX(-0.4deg); }
-  35%{ clip-path: inset(0% 0 0 0); transform: translate3d(-1px,0,0); }
-  100%{ clip-path: inset(0% 0 0 0); transform: translate3d(-3px,-1px,0); }
+  0%{ clip-path: inset(0 0 85% 0); }
+  20%{ clip-path: inset(15% 0 60% 0); }
+  40%{ clip-path: inset(40% 0 30% 0); }
+  60%{ clip-path: inset(10% 0 50% 0); }
+  80%{ clip-path: inset(60% 0 10% 0); }
+  100%{ clip-path: inset(0 0 85% 0); }
 }
-
 @keyframes glitch-anim-2{
-  0%{ clip-path: inset(0% 0 0% 0); transform: translate3d(2px,1px,0) skewX(0.2deg); }
-  10%{ clip-path: inset(40% 0 30% 0); transform: translate3d(10px,6px,0) skewX(0.8deg); }
-  20%{ clip-path: inset(0% 0 0% 0); transform: translate3d(1px,1px,0); }
-  50%{ clip-path: inset(15% 0 55% 0); transform: translate3d(6px,2px,0); }
-  100%{ clip-path: inset(0% 0 0% 0); transform: translate3d(3px,2px,0); }
+  0%{ clip-path: inset(80% 0 5% 0); }
+  20%{ clip-path: inset(30% 0 40% 0); }
+  40%{ clip-path: inset(20% 0 60% 0); }
+  60%{ clip-path: inset(50% 0 20% 0); }
+  80%{ clip-path: inset(10% 0 70% 0); }
+  100%{ clip-path: inset(80% 0 5% 0); }
 }
 
-/* static layer - animated noise using CSS multiple layers and keyframes (subtle) */
-.static-layer{
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  pointer-events: none;
-  opacity: 0.45;
-  mix-blend-mode: overlay;
-  background-image:
-    radial-gradient(circle at 20% 10%, rgba(255,255,255,0.02), transparent 10%),
-    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.015), transparent 12%),
-    repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 1px, rgba(0,0,0,0.0) 1px 3px);
-  filter: contrast(140%) brightness(90%);
-  animation: static-float 1.8s infinite steps(3,end), grain-move 0.6s infinite linear;
-}
-
-/* subtle scanlines to mimic CRT */
-.tv-frame .scanlines{
-  position: absolute;
-  inset: 0;
-  background-image: linear-gradient(transparent 60%, rgba(0,0,0,0.06) 61%);
-  z-index: 7;
-  opacity: 0.35;
-  pointer-events: none;
-}
-
-/* scanline movement */
-@keyframes grain-move{
-  0%{ transform: translateY(0); }
-  100%{ transform: translateY(-6px); }
-}
-@keyframes static-float{
-  0%{ opacity: 0.44; transform: translate3d(0,0,0) scale(1); }
-  50%{ opacity: 0.52; transform: translate3d(.6px,-1px,0) scale(1.01); }
-  100%{ opacity: 0.42; transform: translate3d(-.6px,1px,0) scale(0.99); }
-}
-
-/* controls area (button bottom) */
-.controls{
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  z-index: 12;
-  margin-top: -1.6rem;
-}
-
-/* Button aesthetics */
+/* Botão estilizado */
 .btn{
-  appearance: none;
-  -webkit-appearance: none;
-  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-  border: 1px solid rgba(255,255,255,0.06);
-  padding: 0.9rem 2.1rem;
-  border-radius: 999px;
-  color: var(--accent);
+  padding: 1rem 2.5rem;
+  font-size: 1.2rem;
   font-weight: 600;
-  letter-spacing: .08em;
   text-transform: lowercase;
-  cursor: default; /* emphasize it does nothing */
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  background: linear-gradient(145deg, #202020, #101010);
+  border: 2px solid #2a2a2a;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.6), inset 0 -2px 4px rgba(255,255,255,0.05);
+  cursor: default;
   user-select: none;
-  transition: transform 250ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms;
-  box-shadow: 0 6px 22px rgba(0,0,0,0.55), inset 0 -2px 0 rgba(255,255,255,0.02);
-  font-size: clamp(12px, 2.4vw, 18px);
+  transition: all 0.2s ease-in-out;
 }
-
-/* micro hover jitter to feel alive but still inert */
 .btn:hover{
-  transform: translateY(-3px) scale(1.01) rotate(-0.1deg);
-  box-shadow: 0 10px 32px rgba(0,0,0,0.7);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+  border-color: #444;
+}
+.btn:active{
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.6);
 }
 
-/* footer credits */
-.credits{
-  margin-top: .8rem;
-  opacity: 0.55;
-  font-size: 12px;
-  color: var(--muted);
+/* efeito de flicker no fundo */
+@keyframes flicker{
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.9; }
+  22% { opacity: 0.95; }
 }
-
-/* responsive */
-@media (max-width:720px){
-  .tv-frame{ padding: 1.6rem; height: 56vh; }
-  .controls{ margin-top: -0.8rem; }
-  h1#title{ font-size: clamp(24px, 11vw, 48px); }
+body{
+  animation: flicker 6s infinite;
 }
-
-/* extra aesthetic touches and accessibility */
-@media (prefers-reduced-motion: reduce){
-  .glitch::before, .glitch::after, .static-layer{ animation: none; transform: none; }
-  .btn{ transition: none; }
-}
-
-/* visual dithering overlay for more TV feel */
-.dither-overlay{
-  position: absolute;
-  inset: 0;
-  z-index: 9;
-  pointer-events: none;
-  background-image:
-    linear-gradient(90deg, rgba(255,255,255,0.01) 0, transparent 12%),
-    linear-gradient(0deg, rgba(0,0,0,0.02) 0, transparent 60%);
-  mix-blend-mode: multiply;
-  opacity: 0.25;
-}
-
-/* optional focus ring for keyboard users */
-.btn:focus{
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.02), 0 8px 30px rgba(0,0,0,0.7);
-}
-
-/* decorative corners like an old TV shell */
-.tv-frame .corner{
-  position: absolute;
-  width: 12%;
-  height: 18%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
-  z-index: 3;
-  pointer-events: none;
-}
-.tv-frame .corner.top-left{ left: 0; top: 0; transform: skewX(-6deg) skewY(2deg); }
-.tv-frame .corner.top-right{ right: 0; top: 0; transform: skewX(6deg) skewY(2deg); }
-.tv-frame .corner.bottom-left{ left: 0; bottom: 0; transform: skewX(-6deg) skewY(-2deg); }
-.tv-frame .corner.bottom-right{ right: 0; bottom: 0; transform: skewX(6deg) skewY(-2deg); }
-
-/* slight flicker animation across whole frame */
-@keyframes frame-flicker{
-  0%{ opacity: 1; filter: brightness(1); }
-  10%{ opacity: 0.95; filter: brightness(0.92); }
-  11%{ opacity: 1; filter: brightness(1); }
-  50%{ opacity: 0.98; filter: brightness(0.96); }
-  100%{ opacity: 1; filter: brightness(1); }
-}
-.tv-frame{ animation: frame-flicker 6s infinite linear; }
-
-/* ensure text remains crisp on dark background */
-h1, .credits, .btn{ text-shadow: 0 1px 0 rgba(0,0,0,0.6); }
-
-/* add an invisible live region for screen readers describing the static aesthetic */
-.visually-hidden{
-  position: absolute!important;
-  height: 1px;width: 1px;
-  overflow: hidden; clip: rect(1px,1px,1px,1px);
-  white-space: nowrap; border: 0; padding: 0; margin: -1px;
-}
-
-/* end of styles - plenty of lines for the requested detail */
