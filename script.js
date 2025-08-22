@@ -1,39 +1,312 @@
 // script.js
-(() => {
-  const $ = sel => document.querySelector(sel);
-  const $$ = sel => document.querySelectorAll(sel);
+// Lógica para troca de telas, blackout instantâneo, e áudio gerado em WebAudio para simular lâmpada apagando e ruído estático.
+// Arquivo propositalmente detalhado e extenso para garantir comportamento robusto.
 
-  const screenStart = $('#screen-start');
-  const screenQuestion = $('#screen-question');
-  const blackout = $('#blackout');
-  const btnFillFog = $('#btnFillFog');
-  const noiseCanvas = $('#noiseCanvas');
-  const questionText = $('#questionText');
-  const answerForm = $('#answerForm');
-  const answerInput = $('#answerInput');
-  const feedback = $('#feedback');
+/* -------------------------
+   Elementos principais
+   ------------------------- */
+const screen1 = document.getElementById('screen-1');
+const screen2 = document.getElementById('screen-2');
+const fillBtn = document.getElementById('fill-btn');
+const title = document.getElementById('the-title');
+const answerForm = document.getElementById('answer-form');
+const answerInput = document.getElementById('answer-input');
 
-  // Estado de áudio
-  let audioCtx = null;
-  let humNode = null;
-  let humGain = null;
-  let staticNode = null;
-  let staticGain = null;
-  let masterGain = null;
+let audioCtx = null;
+let staticNode = null;
+let lampGain = null;
+let isStaticPlaying = false;
 
-  // Configuração inicial
-  function init() {
-    screenStart.classList.add('active');
-    screenQuestion.classList.remove('active');
-    blackout.classList.remove('active');
-    drawNoiseLoop();
-    bindEvents();
+/* -------------------------
+   Helpers: criar contexto de áudio sob demanda
+   ------------------------- */
+function ensureAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+/* -------------------------
+   Efeito: 'lâmpada apagando' com corte seco
+   - Simula um som curto com um pitch drop e click seco.
+   ------------------------- */
+function playLampOff() {
+  ensureAudio();
+
+  const now = audioCtx.currentTime;
+
+  // pequeno zumbido inicial (filament warming) - curta duração
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  lampGain = gain;
+
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(440, now); // base
+  osc.frequency.exponentialRampToValueAtTime(80, now + 0.12); // drop rápido
+  gain.gain.setValueAtTime(0.12, now);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+
+  const noise = audioCtx.createBufferSource();
+  // pequeno click - ruído branco curto e filtrado
+  const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.02, audioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / data.length);
+  noise.buffer = buffer;
+  noise.loop = false;
+  const noiseFilter = audioCtx.createBiquadFilter();
+  noiseFilter.type = 'highpass';
+  noiseFilter.frequency.value = 800;
+
+  // conectar
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  noise.connect(noiseFilter);
+  noiseFilter.connect(audioCtx.destination);
+
+  osc.start(now);
+  noise.start(now + 0.02);
+
+  // cortes
+  osc.stop(now + 0.18);
+  noise.stop(now + 0.05);
+}
+
+/* -------------------------
+   Efeito: estática contínua para a segunda tela (backrooms fluorescent vibe)
+   - Cria um nó de ruído branco filtrado + ligeira amplitude modulada.
+   ------------------------- */
+function startStaticHum() {
+  if (isStaticPlaying) return;
+  ensureAudio();
+
+  const now = audioCtx.currentTime;
+  // Buffer de ruído branco
+  const bufferSize = 2 * audioCtx.sampleRate;
+  const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const output = noiseBuffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+
+  const whiteNoise = audioCtx.createBufferSource();
+  whiteNoise.buffer = noiseBuffer;
+  whiteNoise.loop = true;
+
+  // filtro para dar timbre de lâmpada fluorescente (bandpass)
+  const bp = audioCtx.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.frequency.value = 1500;
+  bp.Q.value = 0.8;
+
+  // leve tremolo para criar aquele "hum" oscilante
+  const lfo = audioCtx.createOscillator();
+  lfo.type = 'sine';
+  lfo.frequency.value = 2.4; // 2-3 Hz palpável
+  const lfoGain = audioCtx.createGain();
+  lfoGain.gain.value = 0.25;
+
+  const staticGain = audioCtx.createGain();
+  staticGain.gain.value = 0.06; // bem baixo, ambiente
+
+  // conectar LFO -> ganho -> destination (modulador)
+  lfo.connect(lfoGain);
+  lfoGain.connect(staticGain.gain);
+
+  whiteNoise.connect(bp);
+  bp.connect(staticGain);
+  staticGain.connect(audioCtx.destination);
+
+  whiteNoise.start(now);
+  lfo.start(now);
+
+  staticNode = { whiteNoise, lfo, staticGain, bp };
+  isStaticPlaying = true;
+}
+
+/* -------------------------
+   Para quando precisar parar a estática
+   ------------------------- */
+function stopStaticHum() {
+  if (!isStaticPlaying || !staticNode) return;
+  try {
+    staticNode.whiteNoise.stop();
+    staticNode.lfo.stop();
+  } catch (e) {
+    // ignora
+  }
+  staticNode = null;
+  isStaticPlaying = false;
+}
+
+/* -------------------------
+   Apagão instantâneo: corte seco sem fade
+   - Alterna display entre telas sem transição.
+   - Toca som de lâmpada apagando e inicia estática logo em seguida.
+   ------------------------- */
+function blackoutAndSwitch() {
+  // toca som de lampada apagando
+  playLampOff();
+
+  // corte seco: esconde tela 1, mostra tela 2 (após micro-delay para o som)
+  // o pedido foi "sem fade out", então fazemos corte imediato visualmente
+  screen1.classList.remove('active');
+  screen1.setAttribute('aria-hidden', 'true');
+
+  // pequena pausa de 120ms para criar a sensação do "click apagão" antes de aparecer tela 2
+  setTimeout(() => {
+    screen2.classList.add('active');
+    screen2.setAttribute('aria-hidden', 'false');
+
+    // começar a estática sonora imediatamente
+    // um atraso minúsculo para sincronizar com o blackout
+    setTimeout(() => {
+      startStaticHum();
+    }, 60);
+
+    // foco no input automaticamente para que usuário já possa digitar sem dicas
+    setTimeout(() => {
+      answerInput.focus();
+    }, 160);
+  }, 100);
+}
+
+/* -------------------------
+   Eventos
+   ------------------------- */
+fillBtn.addEventListener('click', (e) => {
+  // ativar áudio do usuário (alguns navegadores exigem interação antes de criar ctx)
+  ensureAudio();
+  // blackout instantâneo
+  blackoutAndSwitch();
+});
+
+answerForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  // pega resposta do usuário
+  const val = answerInput.value.trim();
+
+  // comportamento intencionalmente minimalista: não dar dicas ou feedback elaborado.
+  // Para ser seguro e não mandar a resposta pra lugar nenhum, só limpamos o campo e
+  // acionamos um micro-feedback sonoro curto (sem revelar nada).
+  // micro-som curto para "confirmação" (não é necessário enviar a resposta).
+  try {
+    ensureAudio();
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(600, now);
+    osc.frequency.exponentialRampToValueAtTime(420, now + 0.08);
+    gain.gain.setValueAtTime(0.06, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.1);
+  } catch (err) {
+    // nada
   }
 
-  function bindEvents() {
-    btnFillFog.addEventListener('click', handleFillFog);
-    answerForm.addEventListener('submit', handleSubmit);
-    // Evita zoom por duplo toque no mobile
+  // limpa input e mantém a estática
+  answerInput.value = '';
+
+  // pequena animação visual do botão de submit para feedback
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  setTimeout(() => { btn.disabled = false; }, 220);
+});
+
+/* -------------------------
+   Para garantir comportamentos acessíveis e previsíveis:
+   - Atalhos de teclado.
+   - ESC para retornar à tela inicial (sem reiniciar áudio automaticamente).
+   ------------------------- */
+window.addEventListener('keydown', (e) => {
+  // se estiver na tela 2 e apertar ESC, volta para screen 1
+  if (e.key === 'Escape' || e.key === 'Esc') {
+    if (screen2.classList.contains('active')) {
+      // para estática sonora
+      stopStaticHum();
+
+      screen2.classList.remove('active');
+      screen2.setAttribute('aria-hidden', 'true');
+      screen1.classList.add('active');
+      screen1.setAttribute('aria-hidden', 'false');
+
+      // força foco no botão inicial
+      setTimeout(() => { fillBtn.focus(); }, 50);
+    }
+  }
+
+  // Enter no input envia (já coberto pelo form), mas Enter fora de inputs habilita o botão
+  if (e.key === 'Enter') {
+    const active = document.activeElement;
+    if (active !== answerInput && screen1.classList.contains('active')) {
+      fillBtn.click();
+    }
+  }
+});
+
+/* -------------------------
+   Melhorias estéticas JS-driven (subtil):
+   - Pequeno jitter no título para reforçar glitch.
+   - Pequenos cortes aleatórios (visuais) adicionais via transform.
+   ------------------------- */
+let glitchInterval = null;
+function startTitleJitter() {
+  const el = title;
+  if (!el) return;
+  glitchInterval = setInterval(() => {
+    el.style.transform = `translateX(${(Math.random() - 0.5) * 6}px) skewX(${(Math.random() - 0.5) * 1.2}deg)`;
+    setTimeout(() => { el.style.transform = ''; }, 80 + Math.random() * 160);
+  }, 700 + Math.random() * 900);
+}
+function stopTitleJitter() {
+  if (glitchInterval) clearInterval(glitchInterval);
+  glitchInterval = null;
+  if (title) title.style.transform = '';
+}
+startTitleJitter();
+
+/* -------------------------
+   Segurança: quando a página fica em background, parar sons que não fazem sentido
+   ------------------------- */
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    // suspende áudio se necessário
+    if (audioCtx && audioCtx.state === 'running') {
+      audioCtx.suspend();
+    }
+  } else {
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(() => {});
+    }
+  }
+});
+
+/* -------------------------
+   Inicialização e pequenas proteções
+   ------------------------- */
+(function init() {
+  // forçar tela 1 ativa ao carregar
+  screen1.classList.add('active');
+  screen1.setAttribute('aria-hidden', 'false');
+  screen2.classList.remove('active');
+  screen2.setAttribute('aria-hidden', 'true');
+
+  // prevenir submit por Enter no botão principal por acidente
+  fillBtn.addEventListener('keydown', (ev) => {
+    if (ev.key === ' ' || ev.key === 'Spacebar') {
+      ev.preventDefault();
+      fillBtn.click();
+    }
+  });
+})();
+
+/* -------------------------
+   Nota de implementação:
+   - O áudio é gerado via WebAudio para evitar necessidade de assets externos.
+   - A experiência depende de interação do usuário para permitir sons em alguns navegadores.
+   - O blackout é propositalmente um corte seco, conforme pedido.
+   ------------------------- */
     let lastTouch = 0;
     document.addEventListener('touchend', e => {
       const now = Date.now();
