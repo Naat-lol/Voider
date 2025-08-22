@@ -1,319 +1,135 @@
+/* Reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: monospace;
+  color: white;
 }
 
+/* Corpo */
 body {
-    min-height: 100vh;
-    background: #0a0a0a;
-    color: #c9c9c9;
-    font-family: 'Roboto Mono', monospace;
-    overflow: hidden;
-    position: relative;
-    line-height: 1.6;
+  background: black;
+  height: 100vh;
+  overflow: hidden;
 }
 
-/* CRT base */
-.crt-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    overflow: hidden;
+/* Telas */
+.screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-.crt-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(rgba(18, 16, 16, 0.25) 50%, rgba(0, 0, 0, 0.25) 50%);
-    background-size: 100% 4px;
-    z-index: 2;
-    pointer-events: none;
+.screen.active {
+  display: flex;
 }
 
-/* Estática */
-.tv-static {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        linear-gradient(to right, 
-            rgba(255, 255, 255, 0.06) 0%, 
-            rgba(255, 255, 255, 0.1) 50%, 
-            rgba(255, 255, 255, 0.06) 100%);
-    background-size: 200% 200%;
-    opacity: 0.6;
-    z-index: 1;
-    animation: static 0.4s infinite;
-    mix-blend-mode: overlay;
+/* Efeito fundo de TV sem sinal (PB) */
+#screen1 {
+  background: url('https://i.imgur.com/nb3Ruw5.gif') center/cover no-repeat;
+  filter: grayscale(100%) brightness(0.6);
 }
 
-/* Scanlines */
-.scanlines {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, 
-        rgba(255, 255, 255, 0.05) 50%, 
-        rgba(0, 0, 0, 0.25) 50%);
-    background-size: 100% 3px;
-    pointer-events: none;
-    z-index: 3;
-    opacity: 0.5;
+/* Título glitch */
+.glitch {
+  font-size: 5rem;
+  position: relative;
+  color: white;
+  text-transform: uppercase;
+  animation: glitch-skew 1s infinite linear alternate-reverse;
 }
 
-/* Flicker */
-.flicker {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    z-index: 4;
-    pointer-events: none;
-    animation: flicker 8s infinite;
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: transparent;
+  overflow: hidden;
+  clip: rect(0, 900px, 0, 0);
 }
 
-/* Container principal */
-.container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-    text-align: center;
-    padding: 20px;
-    transition: opacity 1s ease;
+.glitch::before {
+  left: 2px;
+  text-shadow: -2px 0 white;
+  animation: glitch-anim 2s infinite linear alternate-reverse;
 }
 
-/* Título com glitch */
-.title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 7rem;
-    margin-bottom: 2rem;
-    color: #8a2be2;
-    text-shadow: 
-        3px 3px 0 #00ffcc, 
-        -3px -3px 0 #ff00cc;
-    letter-spacing: 6px;
-    position: relative;
-    animation: glitch-skew 1s infinite linear alternate-reverse;
+.glitch::after {
+  left: -2px;
+  text-shadow: -2px 0 gray;
+  animation: glitch-anim2 2s infinite linear alternate-reverse;
 }
 
-.glitch-text::before,
-.glitch-text::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.8;
+@keyframes glitch-anim {
+  0% { clip: rect(42px, 9999px, 44px, 0); }
+  5% { clip: rect(12px, 9999px, 56px, 0); }
+  10% { clip: rect(85px, 9999px, 140px, 0); }
+  15% { clip: rect(24px, 9999px, 90px, 0); }
+  20% { clip: rect(0, 9999px, 50px, 0); }
+  100% { clip: rect(42px, 9999px, 44px, 0); }
 }
 
-.glitch-text::before {
-    animation: glitch-animation 0.3s infinite;
-    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-    transform: translate(-5px, -3px);
-    color: #00ffcc;
-    text-shadow: 3px 3px 0 #ff00cc;
-}
-
-.glitch-text::after {
-    animation: glitch-animation 0.3s infinite reverse;
-    clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
-    transform: translate(5px, 3px);
-    color: #ff00cc;
-    text-shadow: -3px -3px 0 #00ffcc;
-}
-
-/* Botão */
-.void-button {
-    background: rgba(106, 90, 205, 0.2);
-    color: #d8bfd8;
-    border: 2px solid #9370db;
-    padding: 15px 40px;
-    font-size: 1.5rem;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    backdrop-filter: blur(5px);
-    box-shadow: 0 0 20px rgba(147, 112, 219, 0.5);
-    font-family: 'Orbitron', sans-serif;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-}
-
-.void-button:hover {
-    background: rgba(138, 43, 226, 0.3);
-    box-shadow: 0 0 30px rgba(147, 112, 219, 0.8);
-    transform: translateY(-5px);
-}
-
-.void-button:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: 0.5s;
-    z-index: -1;
-}
-
-.void-button:hover:before {
-    left: 100%;
-}
-
-/* Tela de pergunta */
-.question-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: #1a1a1a;
-    z-index: 20;
-    padding: 20px;
-    text-align: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 1.5s ease;
-}
-
-.question-screen.visible {
-    opacity: 1;
-    pointer-events: all;
-}
-
-.question-text {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    color: #9370db;
-    text-shadow: 0 0 10px rgba(147, 112, 219, 0.7);
-}
-
-.answer-input {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid #6a5acd;
-    color: #fff;
-    padding: 12px 20px;
-    font-size: 1.2rem;
-    border-radius: 5px;
-    margin-bottom: 1.5rem;
-    width: 100%;
-    max-width: 400px;
-    font-family: 'Roboto Mono', monospace;
-}
-
-.submit-answer {
-    background: rgba(106, 90, 205, 0.3);
-    color: #d8bfd8;
-    border: 1px solid #9370db;
-    padding: 12px 30px;
-    font-size: 1.2rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'Orbitron', sans-serif;
-}
-
-.submit-answer:hover {
-    background: rgba(138, 43, 226, 0.4);
-    box-shadow: 0 0 15px rgba(147, 112, 219, 0.7);
-}
-
-.hint {
-    margin-top: 2rem;
-    color: #6a5acd;
-    font-style: italic;
-    font-size: 0.9rem;
-}
-
-/* Utilitários */
-.hidden {
-    display: none !important;
-}
-
-.black-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #000;
-    z-index: 15;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s ease;
-}
-
-.black-screen.visible {
-    opacity: 1;
-}
-
-/* Animações */
-@keyframes static {
-    0%, 100% { background-position: 0 0; opacity: 0.6; }
-    50% { background-position: 100% 100%; opacity: 0.8; }
-}
-
-@keyframes flicker {
-    0%, 45%, 50%, 95%, 100% { background: transparent; }
-    5% { background: rgba(255, 255, 255, 0.05); }
-    7% { background: rgba(255, 255, 255, 0.02); }
-    46% { background: rgba(0, 0, 0, 0.3); }
-    48% { background: rgba(0, 0, 0, 0.2); }
-    96% { background: rgba(255, 255, 255, 0.1); }
-    98% { background: rgba(255, 255, 255, 0.05); }
-}
-
-@keyframes glitch-animation {
-    0% { transform: translate(-5px, -3px); }
-    20% { transform: translate(4px, 3px); }
-    40% { transform: translate(-4px, -3px); }
-    60% { transform: translate(3px, 2px); }
-    80% { transform: translate(-3px, -2px); }
-    100% { transform: translate(-5px, -3px); }
+@keyframes glitch-anim2 {
+  0% { clip: rect(12px, 9999px, 40px, 0); }
+  5% { clip: rect(50px, 9999px, 80px, 0); }
+  10% { clip: rect(10px, 9999px, 30px, 0); }
+  15% { clip: rect(70px, 9999px, 110px, 0); }
+  20% { clip: rect(20px, 9999px, 60px, 0); }
+  100% { clip: rect(12px, 9999px, 40px, 0); }
 }
 
 @keyframes glitch-skew {
-    0%, 100% { transform: skew(0deg) scale(1); }
-    10% { transform: skew(2deg) scale(1.02); }
-    30% { transform: skew(-2deg) scale(1); }
-    50% { transform: skew(3deg) scale(1.02); }
-    70% { transform: skew(-3deg) scale(1); }
-    90% { transform: skew(2deg) scale(1.01); }
+  0% { transform: skew(0deg); }
+  50% { transform: skew(5deg); }
+  100% { transform: skew(-5deg); }
 }
 
-/* Responsivo */
-@media (max-width: 768px) {
-    .title { font-size: 4rem; }
-    .void-button { padding: 12px 30px; font-size: 1.2rem; }
-    .question-text { font-size: 1.8rem; }
+/* Botão */
+button {
+  margin-top: 40px;
+  background: black;
+  color: white;
+  border: 2px solid white;
+  padding: 12px 25px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: white;
+  color: black;
+}
+
+/* Tela preta com pergunta */
+#screen2 {
+  background: black;
+}
+
+.question-container {
+  text-align: center;
+}
+
+.question {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+#answerInput {
+  background: black;
+  border: 1px solid white;
+  color: white;
+  padding: 10px;
+  font-size: 1rem;
+  width: 250px;
+  outline: none;
 }
