@@ -1,83 +1,54 @@
 <!-- index.html -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>The Voider</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Fonte parecida com máquina de escrever -->
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+
+  <!-- CSS externo -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="app" class="app">
-    <canvas id="noiseCanvas" class="tv-noise" aria-hidden="true"></canvas>
+  <!-- TELA 1: INTRO com título glitch e ruído de TV -->
+  <main id="screen-1" class="screen active" aria-hidden="false">
+    <div class="tv-frame">
+      <div class="tv-static-overlay" aria-hidden="true"></div>
 
-    <div id="screen-start" class="screen screen-start" role="region" aria-label="Tela inicial The Voider">
-      <div class="frame">
-        <header class="header">
-          <h1 class="title-glitch" data-text="The Voider">
-            <span aria-hidden="true">The Voider</span>
-            <span aria-hidden="true">The Voider</span>
-            The Voider
-          </h1>
-        </header>
+      <header class="title-wrap">
+        <h1 id="the-title" class="glitch" data-text="THE VOIDER">THE VOIDER</h1>
+      </header>
 
-        <div class="scanline" aria-hidden="true"></div>
-        <div class="vignette" aria-hidden="true"></div>
-
-        <main class="cta-area">
-          <button id="btnFillFog" class="btn-void" type="button" aria-label="Fill the fog">
-            <span class="btn-label">fill the fog</span>
-          </button>
-        </main>
-
-        <footer class="statusbar" aria-hidden="true">
-          <div class="led led-left"></div>
-          <div class="led led-right"></div>
-        </footer>
+      <div class="cta-wrap">
+        <button id="fill-btn" class="btn-glass">fill the fog</button>
       </div>
+
+      <!-- camadas para scanlines e vinheta -->
+      <div class="scanlines" aria-hidden="true"></div>
+      <div class="vignette" aria-hidden="true"></div>
     </div>
+  </main>
 
-    <div id="blackout" class="blackout" aria-hidden="true"></div>
-
-    <div id="screen-question" class="screen screen-question" role="region" aria-label="Pergunta">
-      <div class="question-wrap">
-        <h2 id="questionText" class="question">Quem sussurra quando a luz morre?</h2>
-        <form id="answerForm" class="answer-form" autocomplete="off">
-          <label for="answerInput" class="sr-only">Resposta</label>
-          <input id="answerInput" class="answer-input" name="answer" type="text" inputmode="text" spellcheck="false" />
-          <button class="answer-submit" type="submit">enviar</button>
+  <!-- TELA 2: PERGUNTA + CAIXA DE RESPOSTA (aparece após blackout) -->
+  <section id="screen-2" class="screen" aria-hidden="true">
+    <div class="question-wrap">
+      <div class="question-box">
+        <p class="question-text">o que você deixou pra trás?</p>
+        <form id="answer-form" autocomplete="off">
+          <input id="answer-input" type="text" name="answer" placeholder="digite aqui..." required />
+          <button id="submit-btn" type="submit">enviar</button>
         </form>
-        <p id="feedback" class="feedback" aria-live="polite"></p>
-      </div>
-
-      <div class="ambient-ui" aria-hidden="true">
-        <div class="scanline strong"></div>
-        <div class="vignette hard"></div>
-        <div class="noise-overlay"></div>
       </div>
     </div>
-  </div>
 
+    <!-- Static visual element discretamente animado -->
+    <div class="dark-static" aria-hidden="true"></div>
+  </section>
+
+  <!-- JavaScript externo -->
   <script src="script.js" defer></script>
-
-  <!-- Estrutura redundante para garantir >30 linhas e camadas visuais -->
-  <div class="decor decor-a" aria-hidden="true"></div>
-  <div class="decor decor-b" aria-hidden="true"></div>
-  <div class="decor decor-c" aria-hidden="true"></div>
-  <div class="decor decor-d" aria-hidden="true"></div>
-  <div class="decor decor-e" aria-hidden="true"></div>
-  <div class="decor decor-f" aria-hidden="true"></div>
-  <div class="decor decor-g" aria-hidden="true"></div>
-  <div class="decor decor-h" aria-hidden="true"></div>
-  <div class="decor decor-i" aria-hidden="true"></div>
-  <div class="decor decor-j" aria-hidden="true"></div>
-  <div class="decor decor-k" aria-hidden="true"></div>
-  <div class="decor decor-l" aria-hidden="true"></div>
-  <div class="decor decor-m" aria-hidden="true"></div>
-  <div class="decor decor-n" aria-hidden="true"></div>
-  <div class="decor decor-o" aria-hidden="true"></div>
 </body>
 </html>
