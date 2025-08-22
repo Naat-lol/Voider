@@ -5,15 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voider</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="stars"></div>
-    <div class="twinkling"></div>
+    <div class="noise"></div>
+    <div class="glitch"></div>
+    <div class="scanlines"></div>
     
     <div class="container">
         <h1 class="title">Voider</h1>
         <button class="void-button">Fill The Void...</button>
     </div>
+
+    <div class="question-screen hidden">
+        <h2 class="question-text">O que você mais teme no vazio?</h2>
+        <input type="text" class="answer-input" placeholder="Digite sua resposta...">
+        <button class="submit-answer">Enviar</button>
+        <p class="hint">Dica: A resposta está em você</p>
+    </div>
+
+    <audio id="lightSound" preload="auto">
+        <source src="light_switch.mp3" type="audio/mpeg">
+    </audio>
 
     <script src="script.js"></script>
 </body>
