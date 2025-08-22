@@ -1,108 +1,164 @@
-body, html {
-  margin: 0;
-  padding: 0;
+/* Reset básico */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: #0b0b0b;
+  color: #e6e6e6;
+  font-family: "Share Tech Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   overflow: hidden;
-  height: 100%;
-  width: 100%;
-  background: black;
-  font-family: monospace;
-  color: white;
 }
 
-.screen {
-  position: absolute;
-  top: 0; left: 0;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-}
-
-.hidden {
-  display: none;
-}
-
+/* Canvas de ruído ocupa a tela inteira atrás de tudo */
 #noise {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  opacity: 0.22;              /* escuro, quase preto */
+  filter: contrast(120%) brightness(60%);
   pointer-events: none;
 }
 
-.glitch {
-  font-size: 4em;
+/* TELA 1 */
+#screen-start {
   position: relative;
-  color: white;
-  animation: glitch-skew 1s infinite linear alternate-reverse;
-}
-
-.glitch::before, .glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  left: 0;
-  width: 100%;
-  background: transparent;
-  overflow: hidden;
-  clip: rect(0, 900px, 0, 0);
-}
-
-.glitch::before {
-  animation: glitchTop 2s infinite linear alternate-reverse;
-  color: #aaa;
-}
-
-.glitch::after {
-  animation: glitchBottom 1.5s infinite linear alternate-reverse;
-  color: #555;
-}
-
-@keyframes glitchTop {
-  0% { clip: rect(0, 9999px, 0, 0); }
-  20% { clip: rect(0, 9999px, 50px, 0); transform: translate(-5px, -5px); }
-  40% { clip: rect(0, 9999px, 0, 0); }
-  60% { clip: rect(0, 9999px, 20px, 0); transform: translate(5px, -2px); }
-  100% { clip: rect(0, 9999px, 0, 0); }
-}
-
-@keyframes glitchBottom {
-  0% { clip: rect(0, 9999px, 0, 0); }
-  20% { clip: rect(30px, 9999px, 70px, 0); transform: translate(5px, 0); }
-  40% { clip: rect(0, 9999px, 0, 0); }
-  60% { clip: rect(10px, 9999px, 50px, 0); transform: translate(-3px, 2px); }
-  100% { clip: rect(0, 9999px, 0, 0); }
-}
-
-@keyframes glitch-skew {
-  0% { transform: skew(0deg); }
-  50% { transform: skew(2deg); }
-  100% { transform: skew(-2deg); }
-}
-
-button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background: black;
-  border: 2px solid white;
-  color: white;
-  font-size: 1.2em;
-  cursor: pointer;
   z-index: 2;
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  place-items: center;
+  gap: 2rem;
+  grid-template-rows: 1fr auto 1fr;
+  background:
+    radial-gradient(ellipse at center, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.8) 100%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 2px, rgba(0,0,0,0.02) 2px 4px);
 }
 
-.question {
-  font-size: 2em;
-  margin-bottom: 20px;
+/* Título glitch P&B */
+.glitch-title {
+  position: relative;
+  font-size: clamp(2.6rem, 7vw, 7rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #ddd;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 12px rgba(255,255,255,0.25);
+  line-height: 1;
+  user-select: none;
+  animation: jitter 2200ms infinite steps(2, end);
+}
+.glitch-title span:first-child {
+  position: absolute; left: 0; top: 0;
+  color: #fff;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 55%);
+  transform: translate(2px, -1px);
+  mix-blend-mode: screen;
+  opacity: 0.6;
+  filter: drop-shadow(0 0 6px #999);
+  animation: glitchTop 1800ms infinite linear alternate;
+}
+.glitch-title span:last-child {
+  position: absolute; left: 0; top: 0;
+  color: #aaa;
+  clip-path: polygon(0 55%, 100% 45%, 100% 100%, 0 100%);
+  transform: translate(-2px, 1px);
+  mix-blend-mode: lighten;
+  opacity: 0.6;
+  filter: drop-shadow(0 0 6px #666);
+  animation: glitchBottom 1700ms infinite linear alternate;
+}
+@keyframes jitter {
+  0%, 100% { transform: translate(0,0) }
+  50% { transform: translate(0.5px, -0.5px) }
+}
+@keyframes glitchTop {
+  0%   { clip-path: polygon(0 0, 100% 0, 100% 42%, 0 48%); transform: translate(2px,-1px) }
+  50%  { clip-path: polygon(0 0, 100% 0, 100% 48%, 0 52%); transform: translate(1px,-2px) }
+  100% { clip-path: polygon(0 0, 100% 0, 100% 44%, 0 50%); transform: translate(3px,-1px) }
+}
+@keyframes glitchBottom {
+  0%   { clip-path: polygon(0 58%, 100% 52%, 100% 100%, 0 100%); transform: translate(-2px,1px) }
+  50%  { clip-path: polygon(0 60%, 100% 50%, 100% 100%, 0 100%); transform: translate(-1px,2px) }
+  100% { clip-path: polygon(0 56%, 100% 46%, 100% 100%, 0 100%); transform: translate(-3px,1px) }
 }
 
-input {
-  padding: 10px;
-  background: black;
-  border: 2px solid white;
-  color: white;
-  font-size: 1em;
+/* Botão */
+.void-btn {
+  appearance: none;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.6);
+  color: #eaeaea;
+  font: inherit;
+  padding: 0.85rem 1.4rem;
+  border-radius: 999px;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  cursor: pointer;
+  backdrop-filter: blur(2px);
+  transition: transform 80ms ease, border-color 120ms ease, background 120ms ease;
 }
+.void-btn:hover { transform: translateY(-1px); border-color: rgba(255,255,255,0.5); }
+.void-btn:active { transform: translateY(0); }
+
+/* Classe que faz APAGÃO seco */
+.blackout {
+  background: #000 !important;
+}
+.blackout #noise,
+.blackout #screen-start {
+  display: none !important;
+}
+
+/* TELA 2: pergunta */
+#screen-question {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  color: #e8e8e8;
+  display: grid;
+  place-items: center;
+  z-index: 3;
+  visibility: hidden;
+}
+#screen-question[aria-hidden="false"] {
+  visibility: visible;
+}
+.q-wrap {
+  width: min(90vw, 780px);
+  display: grid;
+  gap: 1rem;
+}
+.q-text {
+  font-size: clamp(1.1rem, 2.6vw, 1.6rem);
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+#answerForm {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.6rem;
+}
+#answerInput {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  background: #0e0e0e;
+  color: #f1f1f1;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  outline: none;
+}
+#answerInput::placeholder { color: #888; }
+#answerInput:focus { border-color: #5a5a5a; }
+#sendAnswer {
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #2a2a2a;
+  background: #121212;
+  color: #f1f1f1;
+  cursor: pointer;
+}
+
+/* Ajudinhas de acessibilidade sem estragar a vibe */
+:focus-visible { outline: 2px dashed rgba(255,255,255,0.35); outline-offset: 2px; }
