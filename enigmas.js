@@ -82,19 +82,19 @@ function showEnigma(index) {
     // Enigmas com imagem
     if (index === 7) { // 8
         const img = document.createElement('img');
-        img.src = "Imagens/8.png";
+        img.src = "8.png";
         img.style.maxWidth = "100%";
         img.style.height = "auto";
         questionTextElem.appendChild(img);
     } else if (index === 9) { // 10
         const img = document.createElement('img');
-        img.src = "Imagens/10.png";
+        img.src = "10.png";
         img.style.maxWidth = "100%";
         img.style.height = "auto";
         questionTextElem.appendChild(img);
     } else if (index === 10) { // 11
         questionTextElem.innerText = "";
-        morseAudio = new Audio("souns/morse inverso.mp3");
+        morseAudio = new Audio("morse inverso.mp3");
         morseAudio.volume = 0.5;
         function playWithDelay() {
             morseAudio.play();
@@ -111,13 +111,13 @@ function showEnigma(index) {
 
     // Fundo especial
     if (index === 1) {
-        document.body.style.backgroundImage = "url('Imagens/2.png')";
+        document.body.style.backgroundImage = "url('2.png')";
         document.body.style.backgroundSize = "cover";
         document.body.style.backgroundPosition = "center";
     } else if (index === 2 || index === 5) {
         document.body.style.backgroundImage = "none";
     } else if (index === 4) {
-        document.body.style.backgroundImage = "url('Imagens/5.png')";
+        document.body.style.backgroundImage = "url('5.png')";
         document.body.style.backgroundSize = "cover";
         document.body.style.backgroundPosition = "center";
     }
