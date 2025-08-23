@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const questionContainer = document.querySelector('.question-container');
     const body = document.body;
     let firstTime = true;
-    const switchSound = new Audio('souns/luzinha.mp3'); // Som do interruptor
+    const switchSound = new Audio('luzinha.mp3'); // Som do interruptor
 
     startBtn.addEventListener('click', () => {
         if (firstTime) {
