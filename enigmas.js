@@ -94,7 +94,7 @@ function showEnigma(index) {
         questionTextElem.appendChild(img);
     } else if (index === 10) { // Enigma 11
         questionTextElem.innerText = "";
-        morseAudio = new Audio("souns/morse inverso.mp3");
+        morseAudio = new Audio("morse inverso.mp3");
         morseAudio.volume = 0.5;
         function playWithDelay() {
             morseAudio.play();
@@ -165,7 +165,7 @@ function checkAnswer() {
             alert("É o fim da linha! DESISTA AGORA!");
         }
 
-        const wrongSound = new Audio("souns/wrong.mp3");
+        const wrongSound = new Audio("wrong.mp3");
         wrongSound.play();
 
         answerInput.style.transition = "box-shadow 0.1s";
