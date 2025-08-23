@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +7,19 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1 class="title">The Voider</h1>
-        <button class="btn">fill the fog</button>
+    <h1>The Voider</h1>
+    <button id="startBtn" class="minimal-button">. . .</button>
+
+    <div id="overlay"></div>
+
+    <div class="question-container">
+        <p id="question"></p>
+        <input type="text" id="answer" placeholder="Resposta">
+        <button id="submitAnswer">Enviar</button>
     </div>
+
+    <!-- Scripts -->
+    <script src="enigmas.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
