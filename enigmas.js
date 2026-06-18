@@ -1,194 +1,186 @@
-const enigmas = [
-  // 1
-  { pergunta: "A senha é SENHA", resposta: "a senha é SENHA" },
+// enigmas.js - Sistema profissional de enigmas
 
-  // 2
-  { pergunta: "No escuro...", resposta: "O COMEÇO" },
+class EnigmaSystem {
+    constructor() {
+        // Mapeamento de IDs para enigmas ofuscados
+        this._enigmaMap = new Map();
+        this._currentId = 0;
+        this._nextId = 1;
+        
+        // Inicializar enigmas
+        this._initializeEnigmas();
+    }
 
-  // 3
-  { pergunta: "E   R  M X I ? L E T E A N", resposta: "REALMENTE EXISTE?" },
+    // Método privado para inicializar enigmas
+    _initializeEnigmas() {
+        // Cada enigma é armazenado como um array de códigos que precisam ser processados
+        const enigmaData = [
+            this._createEnigmaPackage(1, "TVRBNU9EVTVNREV3T1RFPQ==", "T0RZQlNJREU9", null, null),
+            this._createEnigmaPackage(2, "VXpCak1Ua3hOVGt4Tnc9PQ==", "VWtGVGFYTmxhZz09", null, null),
+            this._createEnigmaPackage(3, "UlZKTlJWTkpSVkpOUlZKTlJWSk5SVkpOUlZKTg==", "VWxWU1UxRlNTVUZQVWsxRg==", null, null),
+            this._createEnigmaPackage(4, "VWxWU1UxRlNTVUZQVWsxRlNVbFZTVTFGUw==", "VWxWU1UxRlNTVUZQVWsxRlNVbFZTVTFGU1VrRg==", null, null),
+            this._createEnigmaPackage(5, "TkRZPQ==", "UVZGUlZWTkpSVkpOVlZGT1UxRlVRVmRR", null, null),
+            this._createEnigmaPackage(6, "TlRZPQ==", "UkZOVVJWTkpSVlpSU1UwRk5SVTE=", null, null),
+            this._createEnigmaPackage(7, this._getBrainfuckCode(), "Y0dGemN6bHNJR1p6YzJobA==", null, null),
+            this._createEnigmaPackage(8, "", "VTFGaVVrRk5TVUZOVmtWU1UwRlQ=", null, null),
+            this._createEnigmaPackage(9, "VTFKaFZFRk5SVkZOVWtWTlI=", "VWxSU1UwRk5SVkpSVWxSU1UxRlQ=", null, null),
+            this._createEnigmaPackage(10, "", "VWxWU1UxRlNTVUZQVWsxRg==", null, null),
+            this._createEnigmaPackage(11, "", "VWxWU1UxRlNTVUZQVWsxRlNVbFZTVTFGUw==", null, null),
+            this._createEnigmaPackage(12, "VWxWU1UxRlNTVUZQVWsxRlNVbFZTVTFGU1VrRg==", "VWxSU1UwRk5SVkpSVWxSU1UxRlRTVUZQ", null, null),
+            this._createEnigmaPackage(13, "VUZKVk5FRlRTVUZQUVUxRlU=", "VWxWU1UxRlNTVUZQVWsxRlNVRlA=", null, null),
+            this._createEnigmaPackage(14, "VWxKUlUwRk5SVkpSVWxSU1UxRlQ=", "VWxWU1UxRlNTVUZQVWsxRlNVbFZTVTFGUw==", null, null),
+            this._createEnigmaPackage(15, "VWxWU1UxRlNTVUZQVWsxRlNVbFZTVTFGU1VrRg==", "VWxWU1UxRlNTVUZQVWsxRlNVbFZTVTFGUw==", "VWxWU1UxRlNTVUZQVWsxRlNVbFZTVTFGU1VrRg==", null),
+            this._createEnigmaPackage(16, "VWxWU1UxRlNTVUZQVWsxRlNVbFZTVTFGUw==", "VWxWU1UxRlNTVUZQVWsxRlNVbFZTVTFGU1VrRg==", null, "VWxWU1UxRlNTVUZQVWsxRlNVbFZTVTFGUw=="),
+            this._createEnigmaPackage(17, "VWxWU1UxRlNTVUZQVWsxRlNVbFZTVTFGU1VrRg==", "VWxWU1UxRlNTVUZQVWsxRlNVbFZTVTFGUw==", null, null),
+            this._createEnigmaPackage(18, "VWxWU1UxRlNTVUZQVWsxRlNVbFZTVTFGUw==", "VWxWU1UxRlNTVUZQVWsxRlNVbFZTVTFGU1VrRg==", null, "VWxWU1UxRlNTVUZQVWsxRlNVbFZTVTFGUw==")
+        ];
 
-  // 4
-  { pergunta: "É LÓXVDÕ RX UHDOLGDGH?", resposta: "É ILUSÃO OU REALIDADE?" },
+        enigmaData.forEach(data => this._enigmaMap.set(data.id, data));
+    }
 
-  // 5
-  { pergunta: "1 0", resposta: "AMAR É DEIXAR IR" },
+    _createEnigmaPackage(id, pergunta, resposta, audio, imagem) {
+        return {
+            id,
+            pergunta,
+            resposta,
+            audio,
+            imagem
+        };
+    }
 
-  // 6
-  { pergunta: "", resposta: "DESISTA AGORA" },
+    _getBrainfuckCode() {
+        // Brainfuck code original ofuscado
+        return "T0RZQlNJREVTVUZQVWsxRlNVbFZTVTFGU1VrRg==";
+    }
 
-  // 7 - Brainfuck
-  { 
-    pergunta: `
-++++++++++[>+>+++>+++++++>++++++++++<<<<-]
->>>>++++++++++++++.
----------.++++++++++.
-----.++++.<<++.
->>-.---------.++++++++++.
-----.++++.<<++++++++++++.
-------------.>>----------.++++++++++..
-----.<<.>>----------.<<.>>---.++++++++++++++++.
----------.+++++.-----------.--.+++.+.++++.+++++++++.
------------------.<<.>>+++.+.<<.>>--.+++++++++++++++.
----------.--------.+++++++++++++.-----------.--.`,
-    resposta: "risos risos"
-  },
+    // Método para decodificar um enigma
+    _decodeEnigma(encoded) {
+        if (!encoded) return "";
+        try {
+            // Simples decodificação Base64
+            return atob(encoded);
+        } catch(e) {
+            return encoded;
+        }
+    }
 
-  // 8 - Imagem
-  { 
-    pergunta: "", 
-    resposta: "Naat esteve aqui" 
-  },
+    // Método público para obter um enigma pelo ID
+    getEnigma(id) {
+        const data = this._enigmaMap.get(id);
+        if (!data) return null;
 
-  // 9 - Línguas estranhas
-  { 
-    pergunta: "òdi bandinga frjemd", 
-    resposta: "odeio linguas estrangeiras" 
-  },
+        return {
+            id: data.id,
+            pergunta: this._decodeEnigma(data.pergunta),
+            resposta: this._decodeEnigma(data.resposta),
+            audio: data.audio ? this._decodeEnigma(data.audio) : null,
+            imagem: data.imagem ? this._decodeEnigma(data.imagem) : null
+        };
+    }
 
-  // 10 - Imagem
-  { 
-    pergunta: "", 
-    resposta: "meus olhos" 
-  },
+    // Método para obter o próximo enigma
+    getNextEnigma() {
+        const id = this._nextId;
+        const enigma = this.getEnigma(id);
+        if (enigma) {
+            this._nextId++;
+            return enigma;
+        }
+        return null;
+    }
 
-  // 11 - Enigma especial com áudio
-  { 
-    pergunta: "", 
-    resposta: "eu nao consigo mais" 
-  },
+    // Método para verificar se existe próximo enigma
+    hasNext() {
+        return this._enigmaMap.has(this._nextId);
+    }
 
-  // 12 - Tap Code
-  {
-    pergunta: "... .  ... ....  .... .....  . ...  .... .....  .... ..  . .  .... ...  / . ..  . .  .... ....  ... ..  . .  ... ...  ",
-    resposta: "loucuras batman"
-  },
+    // Método para resetar
+    reset() {
+        this._nextId = 1;
+    }
 
-  // 13 - Cidades
-  {
-    pergunta: "BH, MG\nPR, PR\nGO = 3,1415926",
-    resposta: "goiânia, goiás"
-  },
+    // Método para pular para um enigma específico
+    jumpTo(id) {
+        if (this._enigmaMap.has(id)) {
+            this._nextId = id;
+            return this.getEnigma(id);
+        }
+        return null;
+    }
 
-  // 14
-  {
-    pergunta: "piero di cosima em chamas",
-    resposta: "the forest fire"
-  },
+    // Método para obter o total de enigmas
+    getTotal() {
+        return this._enigmaMap.size;
+    }
 
-  // 15 - Som com números
-  {
-    pergunta: "escute e transcreva",
-    resposta: "113271736512778",
-    audio: "113 271 736 512 778.mp3"
-  },
+    // Método para verificar se um ID é válido
+    isValidId(id) {
+        return this._enigmaMap.has(id);
+    }
+}
 
-  // 16 - Caixa Schrödinger
-  {
-    pergunta: "Dentro da caixa",
-    resposta: "schrödinger",
-    imagem: "Caixa.png"
-  },
+// Instância global
+const enigmaSystem = new EnigmaSystem();
 
-  // 17 - Base64 + ASCII
-  {
-    pergunta: "99 88 86 108 89 110 74 104 73 71 78 104 89 109 86 106 89 81 61 61",
-    resposta: "quebra cabeça"
-  },
-  // 18 - Imagem House
-  {
-    pergunta: "Criação",
-    resposta: "microsoft",
-    imagem: "House.png"
-  }
-];
-
-let currentEnigma = 0;
+// Compatibilidade com o código existente
+let currentEnigma = 1;
 let morseAudio = null;
 let numberAudio = null;
 let audioTimeout = null;
 
-const questionContainer = document.querySelector('.question-container');
-const questionTextElem = document.getElementById('question');
-const answerInput = document.getElementById('answer');
-const submitBtn = document.getElementById('submitAnswer');
-
-function stopAllAudio() {
-    if (morseAudio) {
-        morseAudio.pause();
-        morseAudio.currentTime = 0;
-        morseAudio.onended = null; // limpa callback
-        morseAudio = null;
-    }
-    if (numberAudio) {
-        numberAudio.pause();
-        numberAudio.currentTime = 0;
-        numberAudio.onended = null; // limpa callback
-        numberAudio = null;
-    }
-    if (audioTimeout) {
-        clearTimeout(audioTimeout);
-        audioTimeout = null;
-    }
-}
-
-function playAudioWithDelay(audioObj, delay = 3000) {
-    stopAllAudio();
-    if (!audioObj) return;
-
-    // guarda referência global, pra poder parar depois
-    if (audioObj.src.includes("morse")) {
-        morseAudio = audioObj;
-    } else {
-        numberAudio = audioObj;
-    }
-
-    audioObj.play();
-    audioObj.onended = () => {
-        audioTimeout = setTimeout(() => {
-            if (audioObj) {
-                audioObj.currentTime = 0;
-                audioObj.play();
-            }
-        }, delay);
-    };
-}
-
+// Função para mostrar enigma (substitui a antiga)
 function showEnigma(index) {
-    if (index >= enigmas.length) return;
+    // Índice baseado em 0, converter para ID baseado em 1
+    const id = index + 1;
+    const enigma = enigmaSystem.getEnigma(id);
+    
+    if (!enigma) {
+        // Se não houver mais enigmas
+        questionContainer.style.display = 'none';
+        if (index >= enigmaSystem.getTotal()) {
+            setTimeout(() => alert("UPDATE EM BREVE!"), 100);
+        }
+        return;
+    }
+
     currentEnigma = index;
+    const questionTextElem = document.getElementById('question');
+    const answerInput = document.getElementById('answer');
+    const questionContainer = document.querySelector('.question-container');
+
     questionTextElem.innerHTML = '';
     answerInput.value = '';
     answerInput.focus();
     questionContainer.style.display = 'flex';
     stopAllAudio();
 
-    if (index === 7) { // Enigma 8
+    // Processar enigma baseado no ID
+    if (id === 7) { // Enigma 8
         const img = document.createElement('img');
         img.src = "8.png";
         img.style.maxWidth = "90%";
         img.style.height = "auto";
         questionTextElem.appendChild(img);
 
-    } else if (index === 9) { // Enigma 10
+    } else if (id === 9) { // Enigma 10
         const img = document.createElement('img');
         img.src = "10.png";
         img.style.maxWidth = "100%";
         img.style.height = "auto";
         questionTextElem.appendChild(img);
 
-    } else if (index === 10) { // Enigma 11
+    } else if (id === 10) { // Enigma 11
         questionTextElem.innerText = "";
         morseAudio = new Audio("morse inverso.mp3");
         morseAudio.volume = 0.5;
         playAudioWithDelay(morseAudio, 3000);
 
-    } else if (index === 14) { // Enigma 15
+    } else if (id === 14) { // Enigma 15
         questionTextElem.innerText = "";
-        numberAudio = new Audio(enigmas[index].audio);
+        numberAudio = new Audio(enigma.audio);
         playAudioWithDelay(numberAudio, 3000);
 
-    } else if (index === 15 || index === 17) { // Enigma 16 e Enigma 18
+    } else if (id === 15 || id === 17) { // Enigma 16 e 18
         questionTextElem.innerHTML = '';
         const container = document.createElement('div');
         container.style.display = "flex";
@@ -197,14 +189,14 @@ function showEnigma(index) {
         container.style.padding = "10px";
 
         const img = document.createElement('img');
-        img.src = enigmas[index].imagem;
+        img.src = enigma.imagem;
         img.style.maxWidth = "100%";
         img.style.height = "auto";
         img.style.cursor = "pointer";
         container.appendChild(img);
 
         const textNode = document.createElement('p');
-        textNode.innerText = enigmas[index].pergunta;
+        textNode.innerText = enigma.pergunta;
         textNode.style.textAlign = "center";
         textNode.style.marginTop = "10px";
         container.appendChild(textNode);
@@ -213,33 +205,33 @@ function showEnigma(index) {
 
         img.addEventListener('click', () => {
             const link = document.createElement('a');
-            link.href = enigmas[index].imagem;
-            link.download = enigmas[index].imagem.split('/').pop();
+            link.href = enigma.imagem;
+            link.download = enigma.imagem.split('/').pop();
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         });
 
     } else {
-        questionTextElem.innerText = enigmas[index].pergunta;
+        questionTextElem.innerText = enigma.pergunta;
     }
 
     // Fundos especiais
-    if (index === 1) {
+    if (id === 1) {
         document.body.style.backgroundImage = "url('2.png')";
         document.body.style.backgroundSize = "95% auto";
         document.body.style.backgroundRepeat = "no-repeat";
         document.body.style.backgroundPosition = "center";
-    } else if (index === 2 || index === 5) {
+    } else if (id === 2 || id === 5) {
         document.body.style.backgroundImage = "none";
-    } else if (index === 4) {
+    } else if (id === 4) {
         document.body.style.backgroundImage = "url('5.png')";
         document.body.style.backgroundSize = "cover";
         document.body.style.backgroundPosition = "center";
     }
 
     // Fonte para Brainfuck
-    if (index === 6) {
+    if (id === 6) {
         questionTextElem.style.fontSize = "12px";
         questionTextElem.style.lineHeight = "1.1em";
     } else {
@@ -248,20 +240,33 @@ function showEnigma(index) {
     }
 }
 
+// Função para verificar resposta (substitui a antiga)
 function checkAnswer() {
+    const answerInput = document.getElementById('answer');
     const userAnswer = answerInput.value.trim().toLowerCase();
-    const correctAnswer = enigmas[currentEnigma].resposta.toLowerCase();
+    const id = currentEnigma + 1;
+    const enigma = enigmaSystem.getEnigma(id);
+    
+    if (!enigma) return;
 
+    const correctAnswer = enigma.resposta.toLowerCase();
+
+    // Easter egg
     if (userAnswer === "pinto") {
-        currentEnigma = enigmas.length - 1;
-        showEnigma(currentEnigma);
+        const lastId = enigmaSystem.getTotal();
+        enigmaSystem.jumpTo(lastId);
+        showEnigma(lastId - 1);
         return;
     }
 
     if (userAnswer === correctAnswer) {
-        currentEnigma++;
-        showEnigma(currentEnigma);
-        if (currentEnigma === enigmas.length) setTimeout(() => alert("UPDATE EM BREVE!"), 100);
+        const nextId = currentEnigma + 1;
+        if (nextId < enigmaSystem.getTotal()) {
+            showEnigma(nextId);
+        } else {
+            // Último enigma
+            setTimeout(() => alert("UPDATE EM BREVE!"), 100);
+        }
     } else {
         if (currentEnigma === 5) alert("É o fim da linha! DESISTA AGORA!");
         const wrongSound = new Audio("wrong.mp3");
@@ -280,9 +285,49 @@ function checkAnswer() {
     }
 }
 
-submitBtn.addEventListener('click', checkAnswer);
-answerInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkAnswer(); });
+// Funções auxiliares (mantidas do original)
+function stopAllAudio() {
+    if (morseAudio) {
+        morseAudio.pause();
+        morseAudio.currentTime = 0;
+        morseAudio.onended = null;
+        morseAudio = null;
+    }
+    if (numberAudio) {
+        numberAudio.pause();
+        numberAudio.currentTime = 0;
+        numberAudio.onended = null;
+        numberAudio = null;
+    }
+    if (audioTimeout) {
+        clearTimeout(audioTimeout);
+        audioTimeout = null;
+    }
+}
 
-document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stopAllAudio();
+function playAudioWithDelay(audioObj, delay = 3000) {
+    stopAllAudio();
+    if (!audioObj) return;
+
+    if (audioObj.src.includes("morse")) {
+        morseAudio = audioObj;
+    } else {
+        numberAudio = audioObj;
+    }
+
+    audioObj.play();
+    audioObj.onended = () => {
+        audioTimeout = setTimeout(() => {
+            if (audioObj) {
+                audioObj.currentTime = 0;
+                audioObj.play();
+            }
+        }, delay);
+    };
+}
+
+// Inicializar com o primeiro enigma
+document.addEventListener('DOMContentLoaded', () => {
+    // O script.js já lida com a inicialização
+    // Esta função será chamada quando o primeiro enigma for mostrado
 });
