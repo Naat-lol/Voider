@@ -6,7 +6,7 @@ const enigmas = [
   { pergunta: "No escuro...", resposta: "O COMEÇO" },
 
   // 3
-  { pergunta: "E   R  M X I ? L E T E A N", resposta: "REALMENTE EXISTE?" },
+  { pergunta: "RXEEMTALE EISTE?", resposta: "REALMENTE EXISTE?" },
 
   // 4
   { pergunta: "É LÓXVDÕ RX UHDOLGDGH?", resposta: "É ILUSÃO OU REALIDADE?" },
