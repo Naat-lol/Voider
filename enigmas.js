@@ -9,7 +9,7 @@ const enigmas = [
   { pergunta: "RXEEMTALE EISTE?", resposta: "REALMENTE EXISTE?" },
 
   // 4
-  { pergunta: "É LÓXVDÕ RX UHDOLGDGH?", resposta: "É ILUSÃO OU REALIDADE?" },
+  { pergunta: "QXQFD IRL UHDO", resposta: "NUNCA FOI REAL" },
 
   // 5
   { pergunta: "1 0", resposta: "AMAR É DEIXAR IR" },
@@ -43,7 +43,7 @@ const enigmas = [
   // 9 - Línguas estranhas
   { 
     pergunta: "òdi bandinga frjemd", 
-    resposta: "odeio linguas estrangeiras" 
+    resposta: "odeio línguas estrangeiras" 
   },
 
   // 10 - Imagem
@@ -55,7 +55,7 @@ const enigmas = [
   // 11 - Enigma especial com áudio
   { 
     pergunta: "", 
-    resposta: "eu nao consigo mais" 
+    resposta: "eu não consigo mais" 
   },
 
   // 12 - Tap Code
